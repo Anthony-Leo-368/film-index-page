@@ -1,0 +1,20 @@
+# —— 个人数据：绝对不要提交 ——
+assets/films.xlsx
+assets/snapshot.json
+assets/settings.json
+assets/icon_map.json
+assets/log/
+assets/backup/
+
+# —— 运行产物 ——
+__pycache__/
+*.pyc
+assets/__pycache__/
+
+# —— 系统垃圾 ——
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# —— 每个用户自己的索引页输出 ——
+000_INDEX PAPER/
