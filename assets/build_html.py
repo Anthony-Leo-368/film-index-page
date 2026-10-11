@@ -134,6 +134,8 @@ TEMPLATE = r"""<!DOCTYPE html>
  #icohov img{display:block;max-width:260px;max-height:206px;width:auto;height:auto}
  #icohov .t{font-size:11.5px;color:#667;margin-top:6px;text-align:center;max-width:260px;
    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .bar .prprog{color:#c0392b;font-weight:600}
+ .bar .prprog:empty{display:none}
  .bar{font-size:12px;color:#555}
  .bar b{color:var(--brand-d)}
  .mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:50;align-items:center;justify-content:center}
@@ -448,7 +450,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 </style></head><body>
 
 <header>
- <h1>🎞️ 胶卷文件夹索引 <span style="font-size:11px;font-weight:400;color:#8a94a3;vertical-align:middle">v0.5.2</span></h1>
+ <h1>🎞️ 胶卷文件夹索引 <span style="font-size:11px;font-weight:400;color:#8a94a3;vertical-align:middle">v0.5.3</span></h1>
  <span id="viewSw">
   <button id="vwList" class="on" title="目录视图（表格）">📋 目录视图</button>
   <button id="vwCal" title="日历视图（按拍摄时间排布）">🗓 日历视图</button>
@@ -2767,6 +2769,7 @@ async function togglePreview(btn, hostArg){
       "图片来源：<b>"+esc(got.sub)+"</b>　共 "+got.imgs.length+" 张　"+ thNote + "　"+
       '<a href="'+(SRV?folderHref(d.name):(dirUrl(d.name)+got.sub+"/"))+'" '+
       (SRV?'data-open="'+esc(d.name)+'"':"target=\"_blank\"")+">浏览该文件夹</a>";
+    var pg0 = document.createElement("span"); pg0.className = "prprog"; bar.appendChild(pg0);
     var g = document.createElement("div"); g.className = "grid";
     got.imgs.forEach(function(f, idx){
       var fig = document.createElement("figure"), im = document.createElement("img");
@@ -2938,7 +2941,8 @@ function preBtn(pre){
 /* 该卷进度：以图片元素状态为准（done/failed/dead 均算已处理），
    这样失败、超时、重试都不会让进度卡住 */
 function preStat(pre){
-  var all = pre ? pre.querySelectorAll("img") : [], total = all.length, fin = 0, i, im;
+  /* 只数画廊里的图；标题栏那个型号图标也是 <img>，不能算进来 */
+  var all = pre ? pre.querySelectorAll(".grid img") : [], total = all.length, fin = 0, i, im;
   for (i = 0; i < total; i++){
     im = all[i];
     if (im.dataset.done === "1" || im.dataset.failed === "1" || im.dataset.dead === "1") fin++;
@@ -2954,12 +2958,15 @@ function preProgress(pre){
     else { delete btn.dataset.prog; calSyncSoon(300); }
     return;
   }
+  var pg = pre.querySelector(".bar .prprog");
   if (st.fin < st.total){
-    btn.textContent = "收起 · 读取 " + st.fin + "/" + st.total;
+    btn.textContent = pvLabelOn(st.total);   /* 按钮不再扛长文案，避免把「打开文件夹」挤出画面 */
     btn.title = "还有 " + (st.total - st.fin) + " 张未读取。点一下 = 停止加载剩余照片并收起（已加载的会保留在缓存中）";
+    if (pg) pg.textContent = "读取 " + st.fin + " / " + st.total;
   } else {
     btn.textContent = pvLabelOn(st.total);
     btn.title = "点一下收起该卷预览（双击整行也可以）";
+    if (pg) pg.textContent = "";
   }
 }
 function fitPrebox(pre){
