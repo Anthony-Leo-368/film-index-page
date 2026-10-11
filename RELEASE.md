@@ -10,7 +10,9 @@
 | 文件夹 | 是什么 | 谁在用 |
 |---|---|---|
 | `/Volumes/Port_HDD/.../FILM/000_胶卷索引信息/` | **你平时运行、改代码的地方**，里面有你的 121 卷私人数据 | 你日常用 |
-| `~/Documents/film-index/` | **GitHub 仓库文件夹**，只有代码 + 图标，**没有任何私人数据** | GitHub Desktop 用 |
+| `~/Documents/film-index/` | **GitHub 仓库文件夹**（此文件夹名仍是旧的 film-index，与仓库名无关） | GitHub Desktop 用 |
+
+> **项目名**：GitHub 上的仓库叫 **`film-index-page`**（页面标题也叫「胶卷索引页面」）。
 
 **改了代码之后，要先把改动同步到仓库文件夹**，GitHub Desktop 才看得到。
 
@@ -67,7 +69,7 @@
 ### 第 4 步：在 GitHub 上发 Release
 
 ```
-1. 打开 https://github.com/Anthony-Leo-368/film-index
+1. 打开 https://github.com/Anthony-Leo-368/film-index-page
 2. 右侧 Releases → Create a new release
 3. Choose a tag → 填 v0.5.3 → Create new tag
 4. Release title：v0.5.3
@@ -85,9 +87,9 @@
 
 | 想看什么 | 地址 |
 |---|---|
-| 所有提交记录 | https://github.com/Anthony-Leo-368/film-index/commits/main |
-| 所有版本标签 | https://github.com/Anthony-Leo-368/film-index/tags |
-| 所有发行版（含下载包） | https://github.com/Anthony-Leo-368/film-index/releases |
+| 所有提交记录 | https://github.com/Anthony-Leo-368/film-index-page/commits/main |
+| 所有版本标签 | https://github.com/Anthony-Leo-368/film-index-page/tags |
+| 所有发行版（含下载包） | https://github.com/Anthony-Leo-368/film-index-page/releases |
 | 某次提交改了什么 | 点进那条提交 → 绿红逐行对比 |
 | 本地看 | GitHub Desktop → History |
 
