@@ -10,9 +10,9 @@
 | 文件夹 | 是什么 | 谁在用 |
 |---|---|---|
 | `/Volumes/Port_HDD/.../FILM/000_胶卷索引信息/` | **你平时运行、改代码的地方**，里面有你的 121 卷私人数据 | 你日常用 |
-| `~/Documents/film-index/` | **GitHub 仓库文件夹**（此文件夹名仍是旧的 film-index，与仓库名无关） | GitHub Desktop 用 |
+| `~/Documents/film-index-page/` | **GitHub 仓库文件夹**，只有代码 + 图标，**没有任何私人数据** | GitHub Desktop 用 |
 
-> **项目名**：GitHub 上的仓库叫 **`film-index-page`**（页面标题也叫「胶卷索引页面」）。
+> **项目名统一为 `film-index-page`**：GitHub 仓库、本地文件夹、页面标题都是这个名字。
 
 **改了代码之后，要先把改动同步到仓库文件夹**，GitHub Desktop 才看得到。
 
@@ -24,7 +24,7 @@
 
 ```
 1. 在硬盘上的软件目录里改代码、跑一遍确认没问题
-2. 双击 ~/Documents/film-index/同步代码.command
+2. 双击 ~/Documents/film-index-page/同步代码.command
 3. 打开 GitHub Desktop，左边 Changes 会列出改了哪些文件
    （绿色 + 是新增，红色 − 是删除，可以逐个点开看）
 4. 左下角 Summary 填一句，比如：
