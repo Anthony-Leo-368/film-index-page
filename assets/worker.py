@@ -55,7 +55,7 @@ UNDO = os.path.join(BACKUP, "_undo.xlsx")
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 MISS = "-"
 MAXROWS = 300
-VERSION = "0.5.3"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
+VERSION = "v1.0.1"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
 
 DEFAULT_SET = {"excel": "films.xlsx", "auto": True, "theme": "#4472c4", "throttle": 60,
                "imgOrder": "scan", "dateFmt": "iso", "thumb": True, "thumbQ": 1,

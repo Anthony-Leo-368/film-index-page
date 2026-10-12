@@ -5,6 +5,233 @@
 <style>
  :root{--brand:#4472c4;--brand-d:#3059a6;--msgh:0px;--hdh:52px}
  *{box-sizing:border-box}
+.logo{font-family:Didot,"Bodoni 72","Hoefler Text",Georgia,"Times New Roman",serif;
+ font-size:23px;font-weight:400;letter-spacing:.3px;margin:0 2px 0 4px;line-height:1.1}
+.verpill{position:relative;display:inline-block;margin-left:10px;vertical-align:middle;
+ font:500 11px/1 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+ padding:4px 9px;border-radius:20px;background:rgba(255,255,255,.18);cursor:default;
+ transition:background var(--d2) var(--e-out)}
+.verpill:hover,.verpill:focus,.verpill:focus-within{background:rgba(255,255,255,.34)}
+.vercard{position:absolute;left:-4px;top:calc(100% + 9px);z-index:80;width:430px;
+ background:#fff;color:#1b1f24;border:1px solid #e6eaf0;border-radius:12px;
+ box-shadow:0 12px 34px rgba(16,24,40,.18),0 2px 6px rgba(16,24,40,.06);
+ padding:15px 17px;font:400 12.5px/1.72 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+ text-align:left;opacity:0;visibility:hidden;pointer-events:none;
+ transform:translateY(-7px) scale(.98);transform-origin:top left;
+ transition:opacity var(--d2) var(--e-out),transform var(--d2) var(--e-out),visibility 0s linear 450ms}
+.vercard, .vercard *{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere}
+.vercard li{text-wrap:pretty}
+/* 隐形“桥”：盖住胶囊与卡片之间的空隙，鼠标穿过时不会断 hover */
+.vercard::before{content:"";position:absolute;left:0;right:0;top:-18px;height:18px}
+.verpill:hover .vercard,.verpill:focus .vercard,.verpill:focus-within .vercard,
+.verpill:hover .vercard::before{}
+.vercard:hover{opacity:1;visibility:visible;pointer-events:auto;transform:none;
+ transition:opacity var(--d3) var(--e-out),transform var(--d3) var(--e-out),visibility 0s}
+.verpill:hover .vercard,.verpill:focus .vercard,.verpill:focus-within .vercard{
+ opacity:1;visibility:visible;pointer-events:auto;transform:none;
+ transition:opacity var(--d3) var(--e-out),transform var(--d3) var(--e-out),visibility 0s}
+.vercard .vt{font-weight:700;font-size:13.5px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.vercard ul{margin:0;padding-left:17px}
+.vercard li{margin-bottom:4px;color:#3d4854}
+.vercard .vlink{display:flex;margin-top:12px;padding-top:11px;border-top:1px solid #eef1f5;
+ color:#1a56b0;text-decoration:none;font-weight:600;font-size:12px;
+ align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vercard .vlink:hover{text-decoration:underline}
+
+#verCard{position:fixed;z-index:200;width:580px;box-sizing:border-box;background:#fff;color:#1b1f24;
+ border:1px solid #e6eaf0;border-radius:12px;box-shadow:0 12px 34px rgba(16,24,40,.18),0 2px 6px rgba(16,24,40,.06);
+ padding:15px 17px;font:400 12.5px/1.72 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+ text-align:left;display:none;opacity:0;transform:translateY(-7px) scale(.98);transform-origin:top left;
+ transition:opacity var(--d3) var(--e-out),transform var(--d3) var(--e-out)}
+#verCard.on{display:block}
+#verCard.in{opacity:1;transform:none}
+#verCard, #verCard *{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere}
+#verCard .vt{font-weight:700;font-size:13.5px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+#verCard ul{margin:0;padding-left:17px}#verCard li{margin-bottom:4px;color:#3d4854;text-wrap:pretty}
+#verCard .vlink{display:flex;margin-top:12px;padding-top:11px;border-top:1px solid #eef1f5;
+ color:#1a56b0;text-decoration:none;font-weight:600;font-size:12px;align-items:center;gap:6px;cursor:pointer}
+#verCard .vlink:hover{text-decoration:underline}
+#verCard .vmeta{display:block;margin-top:9px;color:#8b95a3;font-size:11.5px}
+.vercard{display:none!important}
+
+/* 标题栏标记：与文字视觉等高 */
+.hdmark{width:26px!important;height:26px!important;stroke-width:1.35!important;vertical-align:-4px;margin-right:2px}
+/* ===== 1d 预览面板展开/收起动画 ===== */
+.prebox img{animation:thumbIn var(--d3) var(--e-out) both;animation-delay:calc(var(--i,0)*28ms)}
+@keyframes thumbIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.bar .prprog{transition:color var(--d3) var(--e-out)}
+@media (prefers-reduced-motion: reduce){.prebox img{animation:none}}
+/* ===== 1e 提示框逻辑：不再与撤回条重叠 ===== */
+/* 撤回条出现时，toast 自动上移让位（z-index 也要拉开） */
+.toast{transition:bottom var(--d3) var(--e-out),opacity var(--d3) var(--e-out);z-index:90}
+body:has(.undobar.on) .toast{bottom:88px}
+.undobar{z-index:80}
+/* 提示框：多条消息只显示最新一条（元素本身唯一），加左边色条区分类型 */
+.toast{border-left:3px solid transparent;box-shadow:0 8px 24px rgba(16,24,40,.22)}
+.toast.ok{border-left-color:#4caf50}
+.toast.warn{border-left-color:#e0a92e}
+.toast.err{border-left-color:#e5484d}
+/* ===== 1c 弹窗体系统一 ===== */
+/* 统一遮罩：更柔和的暗色 + 轻微背景虚化 */
+.mask{background:rgba(16,24,40,.42)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+/* 打开动画：遮罩淡入 + 弹窗从 96% 轻微放大上浮（origin-aware） */
+.mask.on{animation:maskIn var(--d3) var(--e-out)}
+@keyframes maskIn{from{opacity:0}to{opacity:1}}
+.mask.on>div{animation:dlgIn var(--d3) var(--e-out)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(9px) scale(.965)}to{opacity:1;transform:none}}
+/* 统一弹窗圆角与阴影 */
+.mask>div{border-radius:14px;box-shadow:0 24px 60px rgba(16,24,40,.28),0 4px 12px rgba(16,24,40,.10)}
+/* 弹窗里的输入控件统一焦点环 */
+.mask input:focus,.mask select:focus,.mask textarea:focus{outline:none;border-color:var(--brand);
+ box-shadow:0 0 0 3px rgba(59,111,212,.16)}
+/* 尊重减弱动态效果 */
+@media (prefers-reduced-motion: reduce){.mask.on,.mask.on>div{animation:none}}
+/* 搜索区精简：占位文字完整、日期模式与帮助按钮收窄 */
+header #q{width:380px!important;max-width:40vw}
+header label.hdlabel[for=dmode]{font-size:11px;color:#aab2bc;letter-spacing:.2px}
+header #dmode{padding:6px 6px!important;font-size:12px!important;max-width:104px;
+ background:transparent!important;border:0!important;color:#7a828c!important}
+header #qhelp{width:20px!important;height:20px!important;font-size:11px!important;
+ background:#f1f4f8;color:#8b95a3;border:0!important}
+header #qhelp:hover{background:#e6ebf2!important;color:#5b6572}
+/* ===== 四项修正 v2 ===== */
+/* 1) 表头冻结：禁用回弹（rubber-band）避免 sticky 被甩出去 */
+#wrap{overscroll-behavior:none!important}
+html,body{overscroll-behavior:none!important}
+#wrap{-webkit-overflow-scrolling:auto}
+/* 2) 操作列：加宽，保证三个按钮全部可见 */
+#tbl thead th.nosort{min-width:198px!important;width:198px!important}
+#tbl tbody td.act{min-width:198px!important}
+#tbl td.act .actbox{flex-wrap:nowrap!important}
+/* 3) 版本胶囊：改灰色系 */
+.verpill{background:#f1f4f8!important;color:#7a828c!important;font-weight:600}
+.verpill:hover,.verpill:focus,.verpill:focus-within{background:#e6ebf2!important;color:#5b6572!important}
+/* 4) 画幅胶囊：默认中性灰，随行状态着色（与行底色区分：描边 + 实色字） */
+#tbl .pill{background:#f4f6f9!important;color:#8b95a3!important;box-shadow:none}
+#tb tr[data-st] #tbl .pill,#tb tr[data-st] .pill{background:var(--stbg)!important;
+ color:var(--stc)!important;box-shadow:inset 0 0 0 1px var(--stc);font-weight:600}
+/* ===== 五项修正 ===== */
+/* 1) 版本胶囊：白底上改用浅蓝底 + 品牌色字，更醒目 */
+.verpill{background:rgba(59,111,212,.12)!important;color:#2d5bb9!important;font-weight:600}
+.verpill:hover,.verpill:focus,.verpill:focus-within{background:rgba(59,111,212,.22)!important}
+/* 2) 操作列：按钮收窄，不再撑出列宽 */
+td.act .actbox{gap:5px!important}
+td.act .actbox>button{padding:3px 8px!important;font-size:11.5px!important;border-radius:6px!important;
+ background:#f4f6f9!important;border:1px solid #e6eaf0!important;color:#3d4854!important;white-space:nowrap}
+td.act .actbox>button:hover{background:#eaeff6!important;border-color:#d8e0ea!important}
+/* 3) 「打开文件夹」等主操作按钮去掉蓝色，统一灰色 */
+button.pv{border:1px solid #e6eaf0!important;color:#3d4854!important;background:#f4f6f9!important;
+ padding:3px 8px!important;font-size:11.5px!important;border-radius:6px!important}
+button.pv.on{background:#eaeff6!important;color:#2c3440!important;border-color:#d8e0ea!important}
+/* 弹窗/设置里的按钮也去掉蓝色主色（删除按钮保留红） */
+.hbtn,.mini,.mask button:not(.delbtn):not(.sec){background:#f4f6f9!important;color:#3d4854!important;
+ border:1px solid #e6eaf0!important;box-shadow:none!important}
+.hbtn:hover,.mini:hover,.mask button:not(.delbtn):not(.sec):hover{background:#eaeff6!important;border-color:#d8e0ea!important}
+/* 4) 表头冻结：吸附在顶栏下方（原来 top:0 被顶栏盖住 → 看不见） */
+/* 滚动容器是 #wrap（overflow:auto），所以 sticky 的 top 要相对它算 = 0 */
+thead th{top:0!important;z-index:12!important;position:sticky!important}
+thead th.nosort{z-index:14!important}
+/* 5) 底部浮动按钮：液态玻璃 */
+#floatBar button,#preBar button{background:rgba(255,255,255,.72)!important;
+ -webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);
+ border:1px solid rgba(255,255,255,.85)!important;border-radius:999px!important;
+ box-shadow:0 8px 28px rgba(16,24,40,.16),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.5)!important;
+ color:#2c3440!important;font-weight:500;padding:8px 15px!important}
+#floatBar button:hover,#preBar button:hover{background:rgba(255,255,255,.88)!important}
+/* ===== 方向 A：精修浅色（逐项对齐预览图）===== */
+body{background:#f7f8fa;color:#1b1f24;-webkit-font-smoothing:antialiased}
+/* 顶栏：白底 + 细分隔线 */
+header{background:#fff!important;color:#1b1f24!important;border-bottom:1px solid #e8ecf1;
+ box-shadow:none!important;padding:9px 20px;gap:12px}
+header h1{color:#1b1f24!important;font-weight:600}
+header .hdlabel{color:#8b95a3!important}
+header #qhelp{background:#f1f4f8;color:#5b6572;border-radius:50%;width:22px;height:22px;
+ display:inline-flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;padding:0}
+/* 工具条按钮：白底描边 */
+header button{background:#fff;color:#3d4854;border:1px solid #dfe5ec;border-radius:8px;
+ font-weight:500;padding:7px 13px;box-shadow:none}
+header button:hover{background:#f4f6f9;border-color:#d3dbe5}
+/* 视图切换：分段控件 */
+#viewSw{background:#f1f4f8!important;border-radius:9px;padding:3px;gap:2px;display:inline-flex;border:0}
+#viewSw button{background:transparent!important;border:0!important;box-shadow:none!important;
+ color:#5b6572!important;font-weight:500;padding:5px 13px!important;border-radius:7px}
+#viewSw button.on{background:#fff!important;color:#1b1f24!important;font-weight:600;
+ box-shadow:0 1px 2px rgba(16,24,40,.08)!important}
+/* 搜索框：浅灰底、占位文字完整可见 */
+#q{background:#f4f6f9!important;border:1px solid #e6eaf0!important;border-radius:9px;
+ color:#1b1f24;padding:8px 12px!important;width:400px;max-width:44vw;font-size:13px}
+#q::placeholder{color:#9aa4b1;font-size:12.5px}
+header select{background:#f4f6f9!important;border:1px solid #e6eaf0!important;border-radius:9px;
+ color:#3d4854!important;padding:7px 10px!important}
+/* 表格：白色圆角卡片 */
+#wrap{background:#fff;border:1px solid #eaeef3;border-radius:12px;
+ box-shadow:0 1px 3px rgba(16,24,40,.06);margin:16px 20px 40px;padding:0}
+thead th{background:#fbfcfd!important;color:#6b7683!important;font-weight:600;font-size:11.5px;
+ letter-spacing:.3px;border-bottom:1px solid #eaedf2!important;border-right:0!important;padding:11px 14px}
+thead th.nosort{background:#fbfcfd!important}
+thead th:first-child{border-top-left-radius:11px}
+thead th:last-child{border-top-right-radius:11px}
+tbody td{padding:0 14px;border-bottom:1px solid #f2f4f7;color:#2c3440;font-size:13px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#f8fafd!important}
+/* 序号：加粗等宽 */
+#tbl tbody td[data-k=seq]{font-weight:600;font-variant-numeric:tabular-nums;color:#1b1f24}
+/* 编号：等宽小字 */
+#tbl tbody td[data-k=code]{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#5b6572}
+/* 日期：等宽淡灰 */
+#tbl tbody td.dc{font-variant-numeric:tabular-nums;color:#5b6572;font-size:12.5px}
+/* 画幅：圆角胶囊 */
+#tbl .pill{display:inline-block;background:#f1f4f8;color:#5b6572;font-size:11.5px;font-weight:500;
+ padding:2px 9px;border-radius:20px;line-height:1.5}
+/* 文件夹名：等宽淡色 */
+#tbl tbody td.name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#8b95a3}
+/* 操作按钮：浅灰胶囊，悬停行时提亮 */
+td.act .actbox{display:flex;gap:6px;justify-content:flex-end;align-items:center}
+td.act .actbox>button{background:#f4f6f9!important;border:1px solid #e6eaf0!important;
+ color:#3d4854!important;border-radius:7px!important;padding:4px 10px!important;font-size:12px;opacity:.72}
+td.act .actbox>button:hover{background:#eef2f7!important;border-color:#d8e0ea!important;opacity:1}
+td.act{background:#fff!important;border-left:1px solid #f0f3f7!important}
+tbody tr:hover>td.act{background:#fff!important}
+/* ===== 1b 表格精修 ===== */
+/* 数字列用等宽数字，纵向对齐不跳动 */
+tbody td{font-variant-numeric:tabular-nums}
+td.num,td.num2,td.mono,td.date{font-variant-numeric:tabular-nums}
+/* 行高统一 */
+tbody td{height:40px;box-sizing:border-box}
+/* 操作按钮：默认降噪，悬停整行时浮出 */
+td.act .actbox>button{opacity:.5;transition:opacity var(--d2) var(--e-out),background var(--d2) var(--e-out),transform var(--d1) var(--e-out)}
+tr:hover td.act .actbox>button,tr:focus-within td.act .actbox>button,td.act .actbox>button:focus{opacity:1}
+td.act .actbox>button:active{transform:scale(.96)}
+/* 行悬停过渡 */
+tbody tr td{transition:background var(--d2) var(--e-out)}
+/* ===== 设计令牌（t1.0.1 重构） ===== */
+:root{
+  --sp1:4px; --sp2:8px; --sp3:12px; --sp4:16px; --sp5:24px;
+  --r1:6px; --r2:8px; --r3:10px; --r4:12px;
+  --sh1:0 1px 2px rgba(16,24,40,.05);
+  --sh2:0 1px 3px rgba(16,24,40,.08), 0 1px 2px rgba(16,24,40,.04);
+  --sh3:0 10px 30px rgba(16,24,40,.14), 0 2px 6px rgba(16,24,40,.06);
+  --d1:110ms; --d2:150ms; --d3:220ms; --d4:320ms;
+  --e-out:cubic-bezier(0.25,1,0.5,1);
+  --e-in:cubic-bezier(0.7,0,0.84,0);
+  --e-both:cubic-bezier(0.65,0,0.35,1);
+}
+/* 自绘 SVG 图标：统一 24 网格、1.75 描边、圆角端点、跟随文字色 */
+.i{width:1em;height:1em;flex:none;stroke:currentColor;fill:none;
+   stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.145em}
+button .i, a .i{margin-right:.34em}
+button:has(> .i:only-child) .i, .ib .i, .mini .i{margin-right:0}
+/* 动效：按钮即时触感 */
+button{transition:background var(--d2) var(--e-out), color var(--d2) var(--e-out),
+  border-color var(--d2) var(--e-out), box-shadow var(--d2) var(--e-out),
+  transform var(--d1) var(--e-out)}
+button:active:not(:disabled){transform:scale(.97)}
+/* 尊重系统「减弱动态效果」 */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
  body{font:14px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:0;background:#f5f6f8;color:#222}
  header{position:sticky;top:0;z-index:20;background:var(--brand);color:#fff;padding:10px 16px;box-shadow:0 2px 6px rgba(0,0,0,.16);
         display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -391,29 +618,117 @@
  .calinfo .cdel{background:#fdeeee;color:#c0392b;border:1px solid #f0c8c8}
  .calinfo .cdel:hover{background:#fbdcdc}
  .calempty{height:30px;line-height:30px;padding:0 12px;box-sizing:border-box;color:#9aa2ad;font-size:12.5px;overflow:hidden}
+/* ===== 收尾修正（放最后，确保覆盖）===== */
+/* 版本胶囊：灰色系 */
+.verpill{background:#eef1f5!important;color:#7a828c!important;font-weight:600}
+.verpill:hover,.verpill:focus,.verpill:focus-within{background:#e3e8ef!important;color:#5b6572!important}
+/* 操作列：收窄按钮 + 缩内边距，三个按钮完整放下 */
+#tbl td.act{padding:0 8px!important}
+#tbl td.act .actbox{gap:4px!important}
+#tbl td.act .actbox>button{padding:3px 7px!important;font-size:11px!important;letter-spacing:-.2px}
+#tbl thead th.nosort{padding:11px 8px!important}
+/* 「打开文件夹」是 <a class=btn>，不是 button，单独去掉蓝色 */
+#tbl td.act .actbox>a.btn{background:#f4f6f9!important;border:1px solid #e6eaf0!important;
+ color:#3d4854!important;border-radius:6px!important;padding:3px 7px!important;font-size:11px!important;
+ text-decoration:none!important;display:inline-flex;align-items:center;opacity:.72;line-height:1.6}
+#tbl td.act .actbox>a.btn:hover{background:#eaeff6!important;border-color:#d8e0ea!important;opacity:1}
+tr:hover #tbl td.act .actbox>a.btn,#tbl tr:hover td.act .actbox>a.btn{opacity:1}
+/* ===== 三项收尾 ===== */
+/* 1) 画幅胶囊：去掉描边环，改实色状态底 + 白字，与灰色高亮明确区分 */
+#tb tr[data-st] .pill{background:var(--stc)!important;color:#fff!important;
+ box-shadow:none!important;font-weight:600}
+/* 2) 操作列：收窄 + 按钮居中 */
+#tbl thead th.nosort{min-width:174px!important;width:174px!important}
+#tbl tbody td.act{min-width:174px!important}
+#tbl td.act .actbox{justify-content:center!important}
+/* ===== 预览来源：分段控件 + 滑块动画 ===== */
+.srcbar{position:relative;display:inline-flex;align-items:center;gap:0;background:#f1f4f8;
+ border-radius:9px;padding:3px;border:0;margin:0 0 9px;font-size:12px;flex-wrap:nowrap}
+.srcbar .sbl{position:relative;z-index:1;font-size:11.5px;color:#9aa4b1;padding:0 9px 0 7px;white-space:nowrap}
+.srcbar .segslide{position:absolute;top:3px;left:0;height:calc(100% - 6px);width:0;background:#fff;
+ border-radius:7px;box-shadow:0 1px 2px rgba(16,24,40,.08);
+ transition:transform var(--d3) var(--e-out),width var(--d3) var(--e-out);pointer-events:none}
+.srcbar .sbtn{position:relative;z-index:1;border:0!important;background:transparent!important;
+ color:#5b6572!important;border-radius:7px!important;font-weight:500;padding:5px 13px!important;
+ box-shadow:none!important}
+.srcbar .sbtn:hover{color:#1b1f24!important}
+.srcbar .sbtn.on{color:#1b1f24!important;font-weight:600}
+.srcbar .sbtn.off,.srcbar .sbtn:disabled{color:#c3c9d1!important;background:transparent!important}
+/* ===== 弹窗标题栏浅色（与主页面区分层次）===== */
+.dlg h2{background:#f7f8fa!important;color:#1b1f24!important;font-weight:600!important;
+ font-size:15px!important;border-bottom:1px solid #eaeef3;border-radius:14px 14px 0 0!important}
+.dlg h2 > .i{color:#8b95a3}
+.dlg .hbtn{background:#fff!important;border:1px solid #e3e8ef!important;color:#5b6572!important}
+.dlg .hbtn:hover{background:#eef2f7!important;color:#2c3440!important}
+.dlg .foot{background:#fafbfc;border-top:1px solid #eef1f5;border-radius:0 0 14px 14px}
+/* ===== 三段修正 ===== */
+td.act .actbox>button{min-width:54px;text-align:center}
+/* 预览来源：外层是行，内层才是分段轨道 */
+.srcbar{display:inline-flex;align-items:center;gap:7px;background:transparent!important;
+ border-radius:0!important;padding:0!important;margin:0 0 9px;border:0!important;flex-wrap:nowrap}
+.srcbar .sbl{font-size:11.5px;color:#9aa4b1;padding:0;white-space:nowrap;position:static}
+.srctrack{position:relative;display:inline-flex;align-items:center;gap:0;background:#f1f4f8;
+ border-radius:9px;padding:3px}
+.srctrack .segslide{position:absolute;top:3px;left:0;height:calc(100% - 6px);width:0;background:#fff;
+ border-radius:7px;box-shadow:0 1px 2px rgba(16,24,40,.08);
+ transition:transform var(--d3) var(--e-out),width var(--d3) var(--e-out);pointer-events:none}
+.srctrack .sbtn{position:relative;z-index:1}
+/* 目录/日历 视图切换：同样的滑块 */
+#viewSw{position:relative}
+#viewSw .segslide{position:absolute;top:3px;left:0;height:calc(100% - 6px);width:0;background:#fff;
+ border-radius:7px;box-shadow:0 1px 2px rgba(16,24,40,.08);
+ transition:transform var(--d3) var(--e-out),width var(--d3) var(--e-out);pointer-events:none}
+#viewSw button{position:relative;z-index:1}
+/* ===== 操作列留白与图标修正 ===== */
+#tbl thead th.nosort{min-width:216px!important;width:216px!important;padding:11px 12px!important}
+#tbl tbody td.act{min-width:216px!important;padding:0 12px!important}
+#tbl td.act .actbox{justify-content:center!important;gap:6px!important;padding:9px 0}
+/* 删除按钮：图标跟随文字色（白） */
+.delbtn .i,.delbtn svg.i{color:#fff!important;stroke:currentColor}
+/* ===== 删除按钮 hover + 标题图标对齐 ===== */
+/* 删除按钮悬停保持红底白字白图标，不再变白 */
+.delbtn:hover,.delbtn:focus{background:#c9403f!important;color:#fff!important;border-color:#c9403f!important}
+.delbtn:hover .i,.delbtn:focus .i{color:#fff!important;stroke:#fff!important}
+.delbtn .i{stroke:#fff!important}
+/* 标题图标：放大并与标题垂直居中，上下与文字齐平 */
+header h1{display:flex!important;align-items:center!important;gap:3px!important}
+.hdmark{width:29px!important;height:29px!important;vertical-align:middle!important;
+ margin:0 3px 0 1px!important;flex:none}
+/* ===== 操作列：确定性布局（等宽按钮网格）===== */
+#tbl tbody td.act{padding:0 16px!important;min-width:0!important}
+#tbl td.act .actbox{display:flex!important;justify-content:center!important;
+ align-items:center!important;gap:6px!important;width:auto!important;padding:0!important}
+#tbl td.act .actbox>button,#tbl td.act .actbox>a.btn{
+ width:auto!important;height:24px!important;box-sizing:border-box!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ padding:0 10px!important;font-size:11.5px!important;line-height:1!important;
+ white-space:nowrap!important;margin:0!important;flex:none!important}
 </style></head><body>
+<svg width='0' height='0' style='position:absolute' aria-hidden='true'><defs><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></symbol><symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M3 15h18M9.5 9.5V20"/></symbol><symbol id="i-hash" viewBox="0 0 24 24"><path d="M4.5 9h15M4.5 15h15M10 3.5 8 20.5M16 3.5l-2 17"/></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6.5 9.5V3.5h11v6M6.5 18h-3v-6.5a1.5 1.5 0 0 1 1.5-1.5h14a1.5 1.5 0 0 1 1.5 1.5V18h-3"/><rect x="6.5" y="14" width="11" height="7" rx="1.5"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.1 14.6a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5v.2a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1h.2a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-7.2l-1.9-2.2A1 1 0 0 0 10.1 5H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></symbol><symbol id="i-folder-open" viewBox="0 0 24 24"><path d="M4 7.5a1 1 0 0 1 1-1h4.6l1.9 2H19a1 1 0 0 1 1 1v1H4z"/><path d="M3.2 10.5h18l-1.9 8.7a1 1 0 0 1-1 .8H5.4a1 1 0 0 1-1-.8z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3.5 6.5h17M9 6.5V4.8A1.3 1.3 0 0 1 10.3 3.5h3.4A1.3 1.3 0 0 1 15 4.8v1.7M18.5 6.5l-.9 13a1.3 1.3 0 0 1-1.3 1.2H7.7a1.3 1.3 0 0 1-1.3-1.2l-.9-13M10.5 11v6M13.5 11v6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M12.5 20H21M16.8 3.7a2.1 2.1 0 0 1 3 3L8 18.5l-4 1 1-4z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.8"/><path d="M20.5 20.5 16 16"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 6L3.5 15.7M3.5 12a8.5 8.5 0 0 1 14.6-6l2.4 2.3"/><path d="M3.5 20V15.7h4.4M20.5 4v4.3h-4.4"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7.5 10.5 12 15l4.5-4.5M4.5 20.5h15"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17.3 4 12.1"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M8.3 12.4l2.6 2.6 4.8-5.3"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M15 9l-6 6M9 9l6 6"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4 2.2 18a1.9 1.9 0 0 0 1.7 2.9h16.2A1.9 1.9 0 0 0 21.8 18L13.7 4a1.9 1.9 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17.2h.01"/></symbol><symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.8-6.3L3.5 8.2"/><path d="M3.5 3.5v4.7h4.7"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M3.5 7.5v5.7h5.7"/><path d="M4.2 13.2A8.5 8.5 0 1 0 6.4 7.4L3.5 10.3"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.4" cy="6.6" r="1.4"/><circle cx="17.2" cy="10.4" r="1.4"/><circle cx="8.6" cy="7.4" r="1.4"/><circle cx="6.6" cy="12.4" r="1.4"/><path d="M12 2.8a9.2 9.2 0 1 0 0 18.4c.85 0 1.4-.65 1.4-1.4 0-.37-.16-.72-.4-1-.26-.28-.4-.63-.4-1 0-.77.63-1.4 1.4-1.4h1.9a5.6 5.6 0 0 0 5.6-5.6c0-4.6-4.2-8.4-9.5-8.4z"/></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol><symbol id="i-film" viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="17" rx="2.5"/><path d="M7.5 3.5v17M16.5 3.5v17M2.5 8.5h5M2.5 15.5h5M16.5 8.5h5M16.5 15.5h5"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.7" cy="9.7" r="1.7"/><path d="M3.5 17.5 9 12.5l4 4 3.2-3 4.3 4"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol><symbol id="i-external" viewBox="0 0 24 24"><path d="M14.5 4.5H20v5.5M19.5 5 12 12.5"/><path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></symbol><symbol id="i-download-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.5-9 6 6 0 0 1 11.6 1.6A3.7 3.7 0 0 1 17.5 18.5M12 12v8M8.8 16.8 12 20l3.2-3.2"/></symbol><symbol id="i-mark" viewBox="0 0 24 24"><rect x="2.6" y="6.8" width="6.6" height="10.4" rx="1.8"/><circle cx="5.9" cy="9.9" r="1.5"/><path d="M9.2 9.8h10.4v4.4H9.2"/><path d="M11.4 9.8v4.4M13.6 9.8v4.4M15.8 9.8v4.4M18 9.8v4.4"/></symbol></defs></svg>
 
 <header>
- <h1>🎞️ 胶卷文件夹索引 <span style="font-size:11px;font-weight:400;color:#8a94a3;vertical-align:middle">v0.5.3</span></h1>
+ <h1><svg class="i hdmark"><use href="#i-mark"/></svg>
+<span class="logo">Film Index Page</span>
+<span class="verpill" tabindex="0">v1.0.1<span class="vercard"><span class="vt">v1.0.1（2026-10-12） 更新内容</span><ul><li>界面全面重构（精修浅色）：顶栏改白底深字、表格改白色圆角卡片、表头浅灰、行高统一 40px、序号与编号改等宽数字。</li><li>新增：自绘 SVG 图标系统（29 个），全面替代 emoji —— 解决不同系统 emoji 风格不统一、无法统一描边的问题。</li><li>新增：设计令牌 + 动效系统。统一间距（4/8/12/16/24）、圆角、三级阴影、时长（110/150/220/320ms）与自定义缓动曲线；支持系统「减弱动态效果」。</li><li>顶栏标题改为艺术字「Film Index Page」（Didot 衬线），左侧图标改为自绘「胶卷盒 + 片条」标记，并与文字垂直居中。</li><li>版本号改为胶囊样式；鼠标悬停显示：当前版本更新内容（读自本文件）+ GitHub 开源地址 + 坚果云下载链接 + 小红书 ID。</li><li>弹窗体系统一：遮罩加背景虚化、统一圆角与三级阴影、加入打开动画（缩放 .965→1 + 淡入 220ms）；弹窗标题栏改浅灰。</li><li>视图切换（目录/日历）与预览来源（扫描/翻拍）改为分段控件，带滑块平滑移动动画；「预览来源」标签移出滑块轨道。</li></ul><a class="vlink" href="https://github.com/Anthony-Leo-368/film-index-page" target="_blank" rel="noopener"><svg class="i"><use href="#i-external"/></svg>github.com/Anthony-Leo-368/film-index-page</a><a class="vlink" href="https://www.jianguoyun.com/p/DSKDf6cQ07D8CxjElasGIAA" target="_blank" rel="noopener"><svg class="i"><use href="#i-download-cloud"/></svg>获取软件及更新下载链接（坚果云）</a><span class="vmeta">小红书：Esc. X-ray</span></span></span></h1>
  <span id="viewSw">
-  <button id="vwList" class="on" title="目录视图（表格）">📋 目录视图</button>
-  <button id="vwCal" title="日历视图（按拍摄时间排布）">🗓 日历视图</button>
+  <button id="vwList" class="on" title="目录视图（表格）"><svg class="i"><use href="#i-list"/></svg>  目录视图</button>
+  <button id="vwCal" title="日历视图（按拍摄时间排布）"><svg class="i"><use href="#i-calendar"/></svg>  日历视图</button>
  </span>
  <span id="mode">…</span>
  <span id="status">正在载入…</span>
  <span class="sp"></span>
- <input id="q" type="search" placeholder="搜索：关键字 / 相机:Nikon / 日期:240808-240909">
+ <input id="q" type="search" placeholder="搜索：关键字 / 相机 / 日期">
  <label class="hdlabel" for="dmode">日期搜索模式</label>
  <select id="dmode" title="日期范围的匹配方式（默认：部分包含）">
   <option value="overlap">部分包含</option>
   <option value="contain">完全包含</option>
  </select>
  <button id="qhelp" class="ghost" title="搜索语法说明">?</button>
- <button id="btnExcel" class="ghost" title="数据来源：载入中…">📊 打开数据 Excel</button>
- <button id="btnCount" class="ghost" title="扫描各卷图片来源与张数（需读一遍文件夹，机械盘较慢；再点可停止）">🔢 统计图片</button>
- <button id="btnIndexPaper" class="ghost" title="导出 Index Paper：勾选胶卷，批量生成可打印的索引 docx">🖨 导出 Index Paper</button>
+ <button id="btnExcel" class="ghost" title="数据来源：载入中…"><svg class="i"><use href="#i-table"/></svg>  打开数据 Excel</button>
+ <button id="btnCount" class="ghost" title="扫描各卷图片来源与张数（需读一遍文件夹，机械盘较慢；再点可停止）"><svg class="i"><use href="#i-hash"/></svg>  统计图片</button>
+ <button id="btnIndexPaper" class="ghost" title="导出 Index Paper：勾选胶卷，批量生成可打印的索引 docx"><svg class="i"><use href="#i-printer"/></svg>  导出 Index Paper</button>
  <button id="btnSync" title="重新读取 Excel（不遍历胶卷文件夹）">⟳ 同步</button>
- <button id="btnSet" class="ghost" title="设置">⚙ 设置</button>
+ <button id="btnSet" class="ghost" title="设置"><svg class="i"><use href="#i-settings"/></svg>  设置</button>
 </header>
 <div id="errbar"></div>
 <div id="qhint"></div>
@@ -443,13 +758,13 @@
 
 <div id="lb">
  <div class="lbbar">
-  <button id="lbZoomOut">➖ 缩小</button><button id="lbZoomIn">➕ 放大</button>
+  <button id="lbZoomOut"><svg class="i"><use href="#i-minus"/></svg>  缩小</button><button id="lbZoomIn"><svg class="i"><use href="#i-plus"/></svg>  放大</button>
   <button id="lbRotL">↺ 左转</button><button id="lbRotR">↻ 右转</button>
-  <button id="lbReset">⭯ 复位</button>
-  <button id="lbDl">⬇ 下载</button>
-  <button id="lbOpen">📁 打开所在位置</button>
+  <button id="lbReset"><svg class="i"><use href="#i-rotate"/></svg>  复位</button>
+  <button id="lbDl"><svg class="i"><use href="#i-download"/></svg>  下载</button>
+  <button id="lbOpen"><svg class="i"><use href="#i-folder"/></svg>  打开所在位置</button>
   <span id="lbName"></span><span class="pct" id="lbZoom">100%</span><span class="idx" id="lbIdx"></span>
-  <button id="lbClose">✕ 关闭</button>
+  <button id="lbClose"><svg class="i"><use href="#i-x"/></svg>  关闭</button>
  </div>
  <div class="stage"><img id="lbimg" alt="" draggable="false">
   <button class="nav" id="lbnavL">‹</button><button class="nav" id="lbnavR">›</button>
@@ -459,19 +774,19 @@
 
 <div class="mask" id="edMask"><div class="dlg wide">
  <h2><span id="edTitle">新增条目</span><span class="hbtnwrap">
-   <button class="hbtn" id="edOpt" title="编辑相机 / 画幅 / 胶卷型号选项（写入 Excel 选项表）">⚙ 选项设置</button>
-   <button class="delbtn" id="edDel">🗑 删除</button></span></h2>
+   <button class="hbtn" id="edOpt" title="编辑相机 / 画幅 / 胶卷型号选项（写入 Excel 选项表）"><svg class="i"><use href="#i-settings"/></svg>  选项设置</button>
+   <button class="delbtn" id="edDel"><svg class="i"><use href="#i-trash"/></svg>  删除</button></span></h2>
  <div class="fbadge" id="edFolderBadge"></div>
  <div class="body">
   <div class="diff" id="edLock" style="color:#a33;background:#fdf3f3;border-radius:6px;padding:8px 10px;margin-bottom:10px"></div>
   <div class="frm" id="edForm"></div>
   <div class="hint" id="edHint">带 <b>*</b> 的为必填：<b>序号</b>（新增时可勾选“手动设置序号”，编辑时不可改）、
    <b>胶卷型号</b>、<b>拍摄开始</b>。拍摄开始为空时该条不会出现在列表里。
-   选项（相机 / 画幅 / 胶卷型号）读自 Excel 的「选项」工作表，点右上角 <b>⚙ 选项设置</b> 可直接改。修改会写到 <code>assets/films.xlsx</code>。<br>
+   选项（相机 / 画幅 / 胶卷型号）读自 Excel 的「选项」工作表，点右上角 <b><svg class="i"><use href="#i-settings"/></svg>  选项设置</b> 可直接改。修改会写到 <code>assets/films.xlsx</code>。<br>
    <b>胶卷型号 / 相机</b> 可直接输入关键字（如 <code>400</code>）即时筛选下拉选项后再选中；输入的型号不在选项库里时会<b>标红</b>，点「确定」会询问是否跳转「选项设置」添加。<br>
-   <b>拍摄状态</b>（拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档）存在 Excel 备注后一列，新条目默认「已归档」；目录视图会按状态给整行着色（「已归档」不高亮），颜色可在 ⚙ 设置 里改。</div>
+   <b>拍摄状态</b>（拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档）存在 Excel 备注后一列，新条目默认「已归档」；目录视图会按状态给整行着色（「已归档」不高亮），颜色可在 <svg class="i"><use href="#i-settings"/></svg>  设置 里改。</div>
  </div>
- <div class="foot"><span style="margin-right:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:#5b6472"><button class="sec" id="edMkFolder" title="在胶卷目录（FILM）下创建这一卷的文件夹">📁 创建文件夹</button><button class="sec" id="edSyncFolder" title="把硬盘上这一卷的文件夹改名成与当前信息一致">🔄 同步文件夹名</button></span><button class="sec" id="edCancel">取消</button><button id="edOk">确定</button></div>
+ <div class="foot"><span style="margin-right:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:#5b6472"><button class="sec" id="edMkFolder" title="在胶卷目录（FILM）下创建这一卷的文件夹"><svg class="i"><use href="#i-folder"/></svg>  创建文件夹</button><button class="sec" id="edSyncFolder" title="把硬盘上这一卷的文件夹改名成与当前信息一致"><svg class="i"><use href="#i-refresh"/></svg>  同步文件夹名</button></span><button class="sec" id="edCancel">取消</button><button id="edOk">确定</button></div>
 </div></div>
 
 <div class="mask" id="cfMask"><div class="dlg">
@@ -483,7 +798,7 @@
 </div></div>
 
 <div class="mask" id="dlMask"><div class="dlg">
- <h2>⚠️ 删除确认（高危操作）</h2>
+ <h2><svg class="i"><use href="#i-alert"/></svg> ️ 删除确认（高危操作）</h2>
  <div class="fbadge" id="dlFolderBadge"></div>
  <div class="body">
   <div class="hint" style="color:#a33">删除会从 Excel 中移除该条目。请输入下方词组以确认（不可复制）：</div>
@@ -498,11 +813,11 @@
 </div></div>
 
 <div class="undobar" id="undobar">
- <span id="undotxt"></span><button id="undoBtn">↩ 撤回</button><button id="undoClose">✕</button>
+ <span id="undotxt"></span><button id="undoBtn"><svg class="i"><use href="#i-undo"/></svg>  撤回</button><button id="undoClose"><svg class="i"><use href="#i-x"/></svg> </button>
 </div>
 
 <div class="mask" id="imMask"><div class="dlg wide">
-<h2>🎞 胶卷图标映射</h2>
+<h2><svg class="i"><use href="#i-film"/></svg>  胶卷图标映射</h2>
 <div class="body">
   <div id="imSum" style="font-size:13px;color:#555;line-height:1.8;margin-bottom:10px">读取中…</div>
   <div class="fld" style="margin-bottom:10px"><label>筛选型号</label><input type="search" id="imFind" placeholder="输入关键字，例如 Kodak / 乐凯 / 5219"></div>
@@ -515,9 +830,9 @@
 <div class="foot"><button class="sec" id="imRematch">按名称重新匹配全部</button><span style="flex:1"></span><button class="sec" id="imClose">关闭</button></div>
 </div></div>
 <div class="mask" id="mask"><div class="dlg wide">
- <h2>设置<span class="hbtnwrap"><button class="hbtn" id="sCloseX" title="关闭设置">✕ 关闭</button></span></h2>
+ <h2>设置<span class="hbtnwrap"><button class="hbtn" id="sCloseX" title="关闭设置"><svg class="i"><use href="#i-x"/></svg>  关闭</button></span></h2>
  <div class="body">
-  <div class="secttl">📁 数据源</div>
+  <div class="secttl"><svg class="i"><use href="#i-folder"/></svg>  数据源</div>
   <div class="row"><label>Excel 文件名</label><input type="text" id="sExcel">
     <span class="note">仅用于服务模式自动读取 <code>assets/</code> 下的这个文件</span></div>
   <div class="row"><label>打开时自动同步</label>
@@ -530,11 +845,7 @@
   <div class="row" style="align-items:flex-start"><label style="padding-top:4px">资源文件</label>
     <span class="files" id="sFiles">—</span></div>
 
-  <div class="secttl">🎨 显示</div>
-  <div class="row"><label>主题色</label>
-    <input type="color" id="sColor" style="width:44px;height:30px;padding:2px">
-    <input type="text" id="sColorTxt" style="width:110px">
-    <button class="mini" id="sColorReset">恢复默认</button></div>
+  <div class="secttl"><svg class="i"><use href="#i-palette"/></svg>  显示</div>
   <div class="row"><label>日期显示格式</label>
     <select id="sDateFmt" style="border:1px solid #ccd2da;border-radius:5px;padding:5px 7px;font-size:13px">
       <option value="iso">2024-04-02（默认 ISO）</option>
@@ -551,7 +862,7 @@
       <div class="note" style="margin-top:4px">勾选控制是否显示，↑ ↓ 调整顺序（只影响网页显示，不改 Excel）。</div>
     </div></div>
 
-  <div class="secttl">🔍 预览</div>
+  <div class="secttl"><svg class="i"><use href="#i-search"/></svg>  预览</div>
   <div class="row" style="align-items:flex-start"><label style="padding-top:2px">图片来源优先级</label>
     <div class="radbox">
       <label class="rad"><input type="radio" name="sImgOrder" id="sImgScan" value="scan">扫描优先：<code>011_scanPost</code> → <code>010_scan</code> → <code>021_camPost</code></label>
@@ -580,18 +891,18 @@
         <span class="note">超出后自动清理最旧的缓存（默认 200 MB）</span>
       </div>
       <div style="margin-top:7px">
-        <button class="mini" id="sThumbOpen">📁 打开缓存文件夹</button>
-        <button class="mini" id="sThumbClear">🗑 清空预览缓存</button>
-        <button class="mini" id="sIcons" title="把「胶卷型号」和图标文件对应起来；改过型号名后可在这里重指">🎞 配置胶卷图标</button>
+        <button class="mini" id="sThumbOpen"><svg class="i"><use href="#i-folder"/></svg>  打开缓存文件夹</button>
+        <button class="mini" id="sThumbClear"><svg class="i"><use href="#i-trash"/></svg>  清空预览缓存</button>
+        <button class="mini" id="sIcons" title="把「胶卷型号」和图标文件对应起来；改过型号名后可在这里重指"><svg class="i"><use href="#i-film"/></svg>  配置胶卷图标</button>
       </div>
     </div></div>
 
   <div class="secttl">⌨ 输入选项库（写回 Excel）</div>
   <div class="row"><label>相机 / 画幅 / 胶卷型号</label>
-    <button class="mini" id="sOpt">⚙ 编辑选项（相机 / 画幅 / 胶卷型号）</button>
+    <button class="mini" id="sOpt"><svg class="i"><use href="#i-settings"/></svg>  编辑选项（相机 / 画幅 / 胶卷型号）</button>
     <span class="note">读自并写回 Excel 的「选项」工作表；保存时立即生效</span></div>
 
-  <div class="secttl">🎞 拍摄状态颜色</div>
+  <div class="secttl"><svg class="i"><use href="#i-film"/></svg>  拍摄状态颜色</div>
   <div class="row" style="align-items:flex-start"><label style="padding-top:4px">行高亮颜色</label>
     <div style="flex:1;min-width:280px">
       <div id="stCfg"></div>
@@ -599,14 +910,14 @@
       <div class="note" style="margin-top:4px">只在「目录视图」按拍摄状态给整行铺底色 + 左侧色条；「已归档」不高亮（保持原样）。日历视图不受影响。</div>
     </div></div>
 
-  <div class="secttl">💾 备份与日志</div>
+  <div class="secttl"><svg class="i"><use href="#i-save"/></svg>  备份与日志</div>
   <div class="row"><label>备份节流（秒）</label>
     <input type="number" id="sThrottle" min="0" max="86400" step="5" style="width:96px;border:1px solid #ccd2da;border-radius:5px;padding:5px 7px;font-size:13px">
     <span class="note">增删改后距上次备份不足该秒数则跳过备份（默认 60 秒，0=每次都备）</span></div>
   <div class="row"><label>文件夹 / 模板</label>
-    <button class="mini" id="sOpenLog">📁 打开日志文件夹</button>
-    <button class="mini" id="sOpenBak">📁 打开备份文件夹</button>
-    <button class="mini" id="sTpl">⬇ 下载 Excel 模板</button></div>
+    <button class="mini" id="sOpenLog"><svg class="i"><use href="#i-folder"/></svg>  打开日志文件夹</button>
+    <button class="mini" id="sOpenBak"><svg class="i"><use href="#i-folder"/></svg>  打开备份文件夹</button>
+    <button class="mini" id="sTpl"><svg class="i"><use href="#i-download"/></svg>  下载 Excel 模板</button></div>
 
   <div class="secttl">⟲ 重置与使用提示</div>
   <div class="row"><label>恢复默认设置</label><button class="mini" id="sResetAll">恢复默认设置</button>
@@ -626,7 +937,7 @@
 </div></div>
 
 <div class="mask sub" id="optMask"><div class="dlg wide">
- <h2>⚙ 选项设置（写入 Excel「选项」工作表）</h2>
+ <h2><svg class="i"><use href="#i-settings"/></svg>  选项设置（写入 Excel「选项」工作表）</h2>
  <div class="body">
   <div class="hint">每行一个选项；空行忽略，重复项自动去重，超出上限自动截断。
    <b>保存后会立即写回 Excel</b>；若编辑页还开着，下拉选项会同步刷新（已填内容保留）。</div>
@@ -641,7 +952,7 @@
 </div></div>
 
 <div class="mask" id="ipMask"><div class="dlg wide">
- <h2>🖨 导出 Index Paper（生成可打印的 docx）<span class="hbtnwrap"><button class="hbtn" id="ipCloseX" title="关闭">✕ 关闭</button></span></h2>
+ <h2><svg class="i"><use href="#i-printer"/></svg>  导出 Index Paper（生成可打印的 docx）<span class="hbtnwrap"><button class="hbtn" id="ipCloseX" title="关闭"><svg class="i"><use href="#i-x"/></svg>  关闭</button></span></h2>
  <div class="body">
   <div id="ipStep1">
    <div class="hint">
@@ -680,13 +991,12 @@
 </div></div>
 
 <div id="floatBar">
- <button id="btnAdd" title="新增一条胶卷记录">➕ 新增条目</button>
+ <button id="btnAdd" title="新增一条胶卷记录"><svg class="i"><use href="#i-plus"/></svg>  新增条目</button>
 </div>
 
 <div id="preBar">
- <button id="thumbSmaller" title="缩小预览图">🔍 −</button>
- <span class="sz" id="thumbSizeTxt">136px</span>
- <button id="thumbBigger" title="放大预览图">🔍 ＋</button>
+ <button id="thumbSmaller" title="缩小预览图"><svg class="i"><use href="#i-search"/></svg>  −</button>
+ <button id="thumbBigger" title="放大预览图"><svg class="i"><use href="#i-search"/></svg>  ＋</button>
  <button id="collapseAll" title="收起当前打开的全部预览">⇱ <span id="collapseTxt">收起全部预览</span> <b id="collapseNum">0</b></button>
 </div>
 <div class="toast" id="toast"></div>
@@ -706,12 +1016,12 @@ var COLSDEF = [
  {k:"seq",  label:"序号", w:58},
  {k:"code", label:"编号", w:80},
  {k:"model",label:"型号", w:244},
- {k:"size", label:"画幅", w:52},
+ {k:"size", label:"画幅", w:72},
  {k:"cam",  label:"相机", w:170},
  {k:"lens", label:"镜头", w:180},
- {k:"d1",   label:"拍摄开始", w:100},
- {k:"d2",   label:"拍摄结束", w:100},
- {k:"dev",  label:"冲扫", w:100},
+ {k:"d1",   label:"拍摄开始", w:112},
+ {k:"d2",   label:"拍摄结束", w:112},
+ {k:"dev",  label:"冲扫", w:112},
  {k:"devnote", label:"冲扫备注", w:180},
  {k:"da",   label:"数码归档", w:100},
  {k:"re",   label:"翻拍", w:100},
@@ -739,9 +1049,24 @@ function visibleCols(src){
 }
 var srcLabel = "（尚未载入）", diag = "";
 var $ = function(id){ return document.getElementById(id); };
-function toast(m, ms){ var t=$("toast"); t.innerHTML=m; t.classList.add("on");
+/* ===== emoji -> SVG ===== */
+var ICO_EMO = {"\u26a0":"alert","\u2713":"check","\u2717":"x-circle","\u2705":"check-circle",
+ "\ud83d\udcc1":"folder","\u2699":"settings","\u2715":"x","\ud83c\udf9e":"film","\ud83d\uddd1":"trash",
+ "\ud83d\udd0d":"search","\ud83d\udd22":"hash","\u2b07":"download","\u270f":"pencil","\ud83d\udcca":"table",
+ "\ud83d\udda8":"printer","\u2795":"plus","\u2796":"minus","\ud83d\udd04":"refresh","\ud83d\udccb":"list",
+ "\ud83d\uddd3":"calendar","\u2b2f":"rotate","\ud83c\udfa8":"palette","\ud83d\udcbe":"save",
+ "\ud83d\uddc2":"folder-open","\u21a9":"undo"};
+function ic(s){
+  return String(s == null ? "" : s).replace(
+    /[\u{1F300}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\uFE0F]/gu,
+    function(e){ var n = ICO_EMO[e]; return n ? ('<svg class="i"><use href="#i-' + n + '"/></svg> ') : ""; });
+}
+function toast(m, ms){ var t=$("toast"); t.innerHTML=ic(m);
+    t.classList.remove("ok","warn","err");
+    var _s=String(m); t.classList.add(/⚠|失败|错误/.test(_s)?"err":(/✓|已/.test(_s)?"ok":"warn"));
+    t.classList.add("on");
   clearTimeout(toast._t); if(ms!==0) toast._t=setTimeout(function(){t.classList.remove("on");}, ms||5000); }
-function setStatus(s){ $("status").textContent = s; }
+function setStatus(s){ $("status").innerHTML = ic(s); }
 function setInfo(s){ srcLabel = s; if ($("sInfo")) $("sInfo").textContent = s;
   var b = $("btnExcel"); if (b) b.title = s + "\n（点击打开数据 Excel）"; }
 function applyTheme(c){ document.documentElement.style.setProperty("--brand", c); }
@@ -901,7 +1226,7 @@ function bindHeaderFit(){
 /* 页头消息条：三种消息共存，按优先级显示（错误 > 数据检查 > 提示） */
 var MSGS = {err: null, date: null, warn: null};
 function setMsg(kind, html, hint, actions){
-  MSGS[kind] = html ? {html: html, hint: hint || "", actions: actions || ""} : null;
+  MSGS[kind] = html ? {html: ic(html), hint: hint || "", actions: ic(actions || "")} : null;
   paintMsg();
 }
 function paintMsg(){
@@ -918,15 +1243,15 @@ function paintMsg(){
   fitMsgBar();
 }
 function showErr(msg, hint, excel){
-  var acts = '<button data-act="set">⚙ 打开设置</button>' +
+  var acts = ic('<button data-act="set">⚙ 打开设置</button>') +
              '<button data-act="sync">⟳ 重试同步</button>';
-  if (excel) acts += '<button data-act="excel">📊 打开数据 Excel</button>';
-  acts += '<button data-act="close">✕ 关闭</button>';
+  if (excel) acts += ic('<button data-act="excel">📊 打开数据 Excel</button>');
+  acts += ic('<button data-act="close">✕ 关闭</button>');
   setMsg("err", "<b>⚠ 读取数据失败：</b>" + esc(msg), esc(hint || ""), acts);
 }
 function showWarn(msg){
   setMsg("warn", "<b>提示：</b>" + esc(msg), "",
-    '<button data-act="set">⚙ 打开设置</button><button data-act="close">✕ 关闭</button>');
+    ic('<button data-act="set">⚙ 打开设置</button><button data-act="close">✕ 关闭</button>'));
 }
 function clearErr(){ MSGS.err = null; MSGS.warn = null; paintMsg(); }
 
@@ -948,7 +1273,7 @@ async function loadData(){
       DATA = snap.data; IMGFB = snap.imgmap || {}; imgCache = {}; SRC_CACHE = {};
       setStatus("共 " + DATA.length + " 卷（服务模式·已同步）");
       setInfo("数据来源：assets/" + snap.excel + "　快照时间：" + snap.generated);
-      $("mode").textContent = "服务模式";
+      $("mode").textContent = "";
       if (snap.warn) showWarn(snap.warn); else clearErr();
       render(); return;
     }
@@ -958,7 +1283,7 @@ async function loadData(){
     DATA = []; imgCache = {}; SRC_CACHE = {}; render();
     setStatus("⚠ 读取 Excel 失败（0 卷）");
     setInfo("数据来源：assets/" + ((snap && snap.excel) || SET.excel || DEF.excel) + "（读取失败）");
-    $("mode").textContent = "服务模式";
+    $("mode").textContent = "";
     showErr(msg, hint, snap && snap.excel);
     return;
   }
@@ -1257,7 +1582,7 @@ var COUNTING = false, STAT_ON = false, STAT_OFF_NOTE = "";
 function statBtn(){
   var b = $("btnCount"); if (!b) return;
   b.classList.toggle("on", !!STAT_ON);
-  b.textContent = STAT_ON ? "🔢 统计已开启" : "🔢 统计图片";
+  b.innerHTML = ic(STAT_ON ? "🔢 统计已开启" : "🔢 统计图片");
   b.title = STAT_ON ? "统计已开启：显示各卷图片张数（点一下关闭；不写入设置，刷新后恢复默认关闭）"
                     : "扫描各卷图片来源与张数（需读一遍文件夹，机械盘较慢；不写入设置，刷新后恢复关闭）";
 }
@@ -1319,8 +1644,7 @@ function setStat(on){
     DATA.forEach(function(d){ d.n = 0; });
     refreshPvLabels();
     setStatus("共 " + DATA.length + " 卷（统计已关闭）");
-    toast("已关闭统计：图片张数不再显示", 2500);
-    return;
+    return;   /* 状态栏已提示，不再弹 toast */
   }
   countAll();
 }
@@ -1603,7 +1927,7 @@ async function openForm(mode, seq){
   var lockBox = $("edLock");
   if (d.locked){
     lockBox.className = "";
-    lockBox.innerHTML = "⚠ 检测到 Excel 正打开 <b>" + esc(d.excel || "films.xlsx") +
+    lockBox.innerHTML = ic("⚠ 检测到 Excel 正打开 <b>") + esc(d.excel || "films.xlsx") +
       "</b>（锁文件 " + esc(d.lockfile || "~$") + "）。<br>直接提交可能被 Excel 保存覆盖，建议先关闭 Excel。";
     toast("⚠ " + (d.excel || "Excel") + " 正被打开，建议先关闭 Excel 再增删改", 8000);
   } else {
@@ -1710,7 +2034,7 @@ function comboBuild(k, lst, val){
     list.innerHTML = "";
     if (!items.length){
       var d = document.createElement("div"); d.className = "empty";
-      d.textContent = q ? "没有匹配的选项（可到「⚙ 选项设置」添加）" : "选项库为空";
+      d.innerHTML = ic(q ? "没有匹配的选项（可到「⚙ 选项设置」添加）" : "选项库为空");
       list.appendChild(d);
     } else {
       items.forEach(function(v, i){
@@ -1835,7 +2159,7 @@ async function saveOpt(){
     toast("✓ " + r.msg + (r.verified ? "（已写入 Excel 并校验通过）" : "（已写入但校验未通过）") + statNote(), 4500);
     if (r.warn) setTimeout(function(){ toast(r.warn, 9000); }, 900);
     var cn = r.counts || {cam:OPT.cam.length,size:OPT.size.length,model:OPT.model.length};
-    $("oMsg").innerHTML = "✓ 已保存：相机 <b>" + cn.cam + "</b> 项 · 画幅 <b>" + cn.size +
+    $("oMsg").innerHTML = ic("✓ 已保存：相机 <b>") + cn.cam + "</b> 项 · 画幅 <b>" + cn.size +
       "</b> 项 · 胶卷型号 <b>" + cn.model + "</b> 项";
     refreshFormOptions();   /* 不关编辑页，已填内容保留 */
     showUndo(r.desc);
@@ -1849,8 +2173,8 @@ async function openSpecial(kind){
   var lab = {log: "日志", backup: "备份", thumb: "预览缓存"}[kind] || "";
   try {
     var r = await getJSON(map[kind]);
-    toast(r && r.ok ? ("✓ 已打开" + lab + "文件夹") :
-                      ("⚠ 打开失败：" + ((r && r.msg) || "未知")), 3000);
+    if (!(r && r.ok)) toast("⚠ 打开失败：" + ((r && r.msg) || "未知"), 3000);
+    /* 成功时不弹提示：Finder 窗口本身就是反馈 */
   } catch(e){ toast("⚠ 打开失败：" + e.message, 4000); }
 }
 function downloadTemplate(){
@@ -2277,17 +2601,19 @@ function iconHDURL(f){
 
 function cellHTML(k, d){
   var t = cellText(k, d);
+  var A = ' data-k="' + k + '"';
   if (k === "model" && SET.showIcon !== false){
     var u = iconURL(d.icon);
-    return '<td class="mdl"><span class="mcell">' +
+    return '<td class="mdl"'+A+'><span class="mcell">' +
       (u ? '<img class="mico" data-icon="'+esc(d.icon||"")+'" src="'+u+'" alt="" loading="lazy" decoding="async" title="'+esc(d.model||"")+'">'
          : '<i class="mico ph"></i>') +
       '<span class="mtxt">'+esc(t)+'</span></span></td>';
   }
-  if (k === "model") return "<td>"+esc(t)+"</td>";
-  if (k === "name") return '<td class="name">'+esc(t)+"</td>";
-  if (DATECOL[k]) return '<td class="dc">'+esc(t)+"</td>";
-  return "<td>"+esc(t)+"</td>";
+  if (k === "model") return "<td"+A+">"+esc(t)+"</td>";
+  if (k === "size")  return '<td'+A+'><span class="pill">'+esc(t)+'</span></td>';
+  if (k === "name")  return '<td class="name"'+A+'>'+esc(t)+"</td>";
+  if (DATECOL[k])    return '<td class="dc"'+A+'>'+esc(t)+"</td>";
+  return "<td"+A+">"+esc(t)+"</td>";
 }
 /* ---------- 目录视图：悬停图标 → 放大显示高清图 ---------- */
 var ICOHOV = null, ICOHOV_T = null;
@@ -2353,7 +2679,7 @@ function buildHead(){
     if (sortKey === k) th.classList.add(sortDir > 0 ? "asc" : "desc");
     row.appendChild(th);
   });
-  var cw = document.createElement("col"); cw.style.width = "186px"; cg.appendChild(cw);
+  var cw = document.createElement("col"); cw.style.width = "236px"; cg.appendChild(cw);
   var th2 = document.createElement("th"); th2.className = "nosort"; th2.textContent = "操作"; row.appendChild(th2);
   applyTableWidth();
   setupCols();
@@ -2566,20 +2892,18 @@ function render(){
   });
   tb.appendChild(frag);
   updateDateMsg();
-  /* 操作列按实际按钮宽度自适应，保证内容始终完整显示（不被省略号截断） */
-  var actW = 186;
-  Array.prototype.forEach.call(tb.querySelectorAll("td.act > .actbox"), function(bx){
-    actW = Math.max(actW, bx.offsetWidth + 22);
-  });
+  /* 操作列：固定宽度 + 等宽按钮网格（几何确定，不做自适应测量）
+     按文字定宽 + 统一高度，右对齐；列宽容纳最宽组合 */
+  var ACT_COL_W = 236;
   var actCol = $("cols") ? $("cols").lastElementChild : null;
-  if (actCol && Math.abs((parseFloat(actCol.style.width) || 0) - actW) > 1){
-    actCol.style.width = Math.ceil(actW) + "px";
+  if (actCol && Math.abs((parseFloat(actCol.style.width) || 0) - ACT_COL_W) > 1){
+    actCol.style.width = ACT_COL_W + "px";
     applyTableWidth();
   }
   var tip = $("endTip"); if (tip) tip.style.display = DATA.length ? "" : "none";
   updateCollapseBtn();
   var st = (terms.length || ONLY_BAD ? "筛出 "+shown+" / " : "共 ")+DATA.length+" 卷";
-  if (sortKey) st += "（按 " + (COLNAME[sortKey]||sortKey) + " 排序）";
+  /* 已按要求去掉「（按 xx 排序）」后缀 */
   if (ONLY_BAD) st += "　·　只看异常";
   /* 把实际生效的日期范围摆出来，方便核对首尾 */
   var drng = null;
@@ -2790,9 +3114,13 @@ async function togglePreview(btn, hostArg){
 function preSrcBar(d, got, prob){
   var wrap = document.createElement("div");
   wrap.className = "srcbar";
+  var lb0 = document.createElement("span"); lb0.className = "sbl"; lb0.textContent = "预览来源";
+  wrap.appendChild(lb0);
+  var track = document.createElement("div"); track.className = "srctrack";
+  wrap.appendChild(track);
+  var slide = document.createElement("i"); slide.className = "segslide";
+  track.appendChild(slide);
   var actual = SUB_SRC[got.sub] || (got.imgs.length ? (IMG_OVERRIDE[d.name] || SET.imgOrder) : "");
-  var lb = document.createElement("span"); lb.className = "sbl"; lb.textContent = "预览来源";
-  wrap.appendChild(lb);
   [["scan", "扫描"], ["cam", "翻拍"]].forEach(function(o){
     var key = o[0], has = !!(prob && prob[key]);
     var b = document.createElement("button");
@@ -2806,8 +3134,19 @@ function preSrcBar(d, got, prob){
       b.disabled = true;
       b.title = "该卷没有" + o[1] + "来源";
     }
-    wrap.appendChild(b);
+    track.appendChild(b);
   });
+  /* 滑块定位：跟随 .on 按钮；按钮状态变化时自动移动 */
+  var segPos = function(){
+    var on = track.querySelector(".sbtn.on"); if (!on) { slide.style.width = "0px"; return; }
+    slide.style.width = on.offsetWidth + "px";
+    slide.style.transform = "translateX(" + on.offsetLeft + "px)";
+  };
+  try { var mo = new MutationObserver(segPos);
+    track.querySelectorAll(".sbtn").forEach(function(b){ mo.observe(b, {attributes:true, attributeFilter:["class"]}); });
+  } catch(e){}
+  setTimeout(segPos, 0); setTimeout(segPos, 120);
+  window.addEventListener("resize", segPos);
   return wrap;
 }
 /* 切换来源：记下覆盖 → 作废该卷的列表缓存 → 关闭旧面板并按新顺序重开 */
@@ -2853,7 +3192,7 @@ function setLoadState(btn, on){
     if (on) btn.dataset.prog = "…"; else delete btn.dataset.prog;
     return;
   }
-  if (on) btn.textContent = "读取图片列表…（点此取消）";
+  if (on) btn.textContent = "加载中";
   else setPvState(btn, DATA[+btn.dataset.i].n, btn.classList.contains("on"));
 }
 
@@ -2863,7 +3202,6 @@ var THUMB_SIZE = 136, THUMB_MIN = 80, THUMB_MAX = 360, THUMB_STEP = 16;
 
 function applyThumbSize(){
   document.documentElement.style.setProperty("--tw", THUMB_SIZE + "px");
-  var t = $("thumbSizeTxt"); if (t) t.textContent = THUMB_SIZE + "px";
   var a = $("thumbSmaller"), b = $("thumbBigger");
   if (a) a.disabled = (THUMB_SIZE <= THUMB_MIN);
   if (b) b.disabled = (THUMB_SIZE >= THUMB_MAX);
@@ -3141,8 +3479,6 @@ function fillSetInputs(){
   var d = draft();
   $("sExcel").value = d.excel || DEF.excel;
   $("sAuto").checked = !!d.auto;
-  $("sColor").value = d.theme || DEF.theme;
-  $("sColorTxt").value = d.theme || DEF.theme;
   $("sDateFmt").value = d.dateFmt || "iso";
   $("sImgScan").checked = (d.imgOrder !== "cam");
   $("sImgCam").checked = (d.imgOrder === "cam");
@@ -3387,7 +3723,7 @@ function bind(){
       else if (MSGS.date){
         MSGS.date = null; DATE_MSG_OFF = true;
         /* 关提示条就必须同时退出「只看异常」，否则没有退出口 */
-        if (ONLY_BAD){ ONLY_BAD = false; render(); toast("已退出「只看异常」，恢复显示全部", 2600); }
+        if (ONLY_BAD){ ONLY_BAD = false; render(); }   /* 状态切换不再弹提示，按钮高亮即是反馈 */
       }
       else MSGS.warn = null;
       paintMsg();
@@ -3509,15 +3845,6 @@ function bind(){
   /* —— 以下设置项均写入草稿，点「应用 / 确定」才生效 —— */
   $("sExcel").addEventListener("change", function(){ draft().excel = this.value.trim() || DEF.excel; });
   $("sAuto").addEventListener("change", function(){ draft().auto = this.checked; });
-  $("sColor").addEventListener("input", function(){ $("sColorTxt").value = this.value; draft().theme = this.value; });
-  $("sColorTxt").addEventListener("change", function(){
-    if (/^#?[0-9a-f]{6}$/i.test(this.value.trim())){
-      draft().theme = this.value.trim(); $("sColor").value = draft().theme;
-    }
-  });
-  $("sColorReset").addEventListener("click", function(){
-    draft().theme = DEF.theme; $("sColor").value = DEF.theme; $("sColorTxt").value = DEF.theme;
-  });
   $("stReset").addEventListener("click", function(){
     draft().stColors = clone(DEF.stColors || {});
     renderStCfg();
@@ -4495,9 +4822,59 @@ async function ipRun(){
   await loadSettings();
   updateCollapseBtn();          /* 单卷预览模式时左下角按钮文案为「收起预览」 */
   $("sExcel").value = SET.excel; $("sAuto").checked = !!SET.auto;
-  $("sColor").value = SET.theme; $("sColorTxt").value = SET.theme;
   $("sThrottle").value = (SET.throttle == null ? 60 : SET.throttle);
   if (SET.auto) await loadData(); else render();
-  toast('点「预览」才会加载图片；「打开文件夹」请用 <b>Safari</b>。更多说明见右上角 <b>⚙ 设置</b>。', 5000);
+  /* 引导说明：只在首次打开时提示一次（记在 localStorage） */
+  try{ if(!localStorage.getItem("fi_hint_shown")){
+    localStorage.setItem("fi_hint_shown","1");
+    toast('点「预览」才会加载图片；「打开文件夹」请用 <b>Safari</b>。更多说明见右上角 <b>⚙ 设置</b>。', 5000);
+  } }catch(e){}
 })();
-</script></body></html>
+</script><script>
+(function(){
+  function boot(){
+    var pill=document.querySelector('.verpill'), src=document.querySelector('.vercard');
+    if(!pill||!src) return;
+    var card=document.createElement('div'); card.id='verCard'; card.innerHTML=src.innerHTML;
+    document.body.appendChild(card);
+    var t=null;
+    function show(){
+      clearTimeout(t);
+      var r=pill.getBoundingClientRect();
+      var w=580, left=Math.max(8, Math.min(r.left-4, window.innerWidth-w-10));
+      card.style.left=left+'px'; card.style.top=(r.bottom+9)+'px';
+      card.classList.add('on');
+      requestAnimationFrame(function(){ card.classList.add('in'); });
+    }
+    function hide(){ card.classList.remove('in'); clearTimeout(t);
+      t=setTimeout(function(){ card.classList.remove('on'); }, 320); }
+    pill.addEventListener('mouseenter', show);
+    pill.addEventListener('focus', show);
+    pill.addEventListener('mouseleave', function(){ clearTimeout(t); t=setTimeout(hide, 420); });
+    card.addEventListener('mouseenter', show);
+    card.addEventListener('mouseleave', hide);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
+<script>
+(function(){
+  function boot(){
+    var sw = document.getElementById('viewSw'); if (!sw) return;
+    var sl = document.createElement('i'); sl.className = 'segslide'; sw.appendChild(sl);
+    function pos(){
+      var on = sw.querySelector('button.on'); if (!on) { sl.style.width='0px'; return; }
+      sl.style.width = on.offsetWidth + 'px';
+      sl.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+    }
+    try { var mo = new MutationObserver(pos);
+      sw.querySelectorAll('button').forEach(function(b){ mo.observe(b, {attributes:true, attributeFilter:['class']}); });
+    } catch(e){}
+    setTimeout(pos, 60); setTimeout(pos, 400); window.addEventListener('resize', pos);
+    sw.addEventListener('click', function(){ setTimeout(pos, 0); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+</body></html>
