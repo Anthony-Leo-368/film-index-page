@@ -2064,6 +2064,7 @@ def serve_thumb(path_p, qs):
 #   · 135：每行 4 张，图片宽度 4.19cm；120：每行 3 张，图片宽度 5.59cm
 #   · 竖图（高 > 宽）旋转 90°；旋转后一律按宽度等比缩放，保证每张图宽度一致
 IP_ORDER = ["011_scanPost", "010_scan", "021_camPost"]
+SUB_ALL = ["010_scan", "011_scanPost", "020_cam", "021_camPost"]   # 标准子文件夹全集（供「添加子文件夹」用）
 IP_TPL_NAME = "index_template.docx"                       # assets/ 下的模板副本（优先）
 IP_TPL_FALLBACK = os.path.join(ROOT, "000_INDEX PRINT", "000_胶卷Index模板.docx")
 IP_PER_ROW = {"135": 4, "120": 3}
@@ -2413,8 +2414,12 @@ def folder_info(seq, name):
     if cur is None and seq:
         cur = ip_find_folder(seq, None)
     found = os.path.basename(cur) if cur else ""
+    subs = []
+    if cur:
+        subs = [{"name": x, "exists": os.path.isdir(os.path.join(cur, x))} for x in SUB_ALL]
     return {"ok": True, "expected": name, "found": found, "exists": bool(cur),
-            "same": bool(cur) and bool(name) and found == name}
+            "same": bool(cur) and bool(name) and found == name,
+            "subs": subs, "dir": os.path.basename(cur) if cur else ""}
 
 
 def folder_delete(seq, name):
@@ -2478,7 +2483,8 @@ def folder_mkdir(cells, subs=False):
     try:
         os.makedirs(dst, exist_ok=True)
         if subs:
-            for s in IP_ORDER + ["020_cam"]:
+            want = SUB_ALL if subs is True else [x for x in SUB_ALL if x in (subs or [])]
+            for s in want:
                 p = os.path.join(dst, s)
                 if not os.path.exists(p):
                     os.makedirs(p)
@@ -2959,7 +2965,7 @@ class H(BaseHTTPRequestHandler):
                         self._json({"ok": True})
             elif path == "/__mkdir":
                 o = json.loads(body.decode("utf-8") or "{}")
-                self._json(folder_mkdir(o.get("cells") or [], bool(o.get("subs"))))
+                self._json(folder_mkdir(o.get("cells") or [], o.get("subs") or False))
             elif path == "/__syncfolder":
                 o = json.loads(body.decode("utf-8") or "{}")
                 cells = o.get("cells") or []

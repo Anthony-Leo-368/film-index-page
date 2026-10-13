@@ -792,6 +792,19 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
 .calbar.cl.cr{border-radius:0!important}
 /* 去掉上一版的箭头 */
 .calbar.cl::before,.calbar.cr::before{content:none!important;display:none!important}
+/* ===== 添加子文件夹面板 ===== */
+#subPanel{margin:10px 0 0;padding:12px 14px;border:1px solid #e3e8ef;border-radius:11px;background:#fbfcfd}
+#subPanel .subhint{font-weight:400;color:#9aa4b1;font-size:11.5px}
+#subPanel .suball{border-bottom:1px solid #eef1f5;margin-bottom:4px;font-weight:600;color:#3d4854}
+#subPanel .subn{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;min-width:104px}
+#subPanel .subd{flex:1;color:#8b95a3;font-size:11.5px}
+#subPanel .subt{font-size:12.5px;font-weight:600;color:#1b1f24;margin-bottom:9px}
+#subPanel .subi{display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:12.5px;color:#2c3440;cursor:pointer}
+#subPanel .subi input{flex:none;margin:0}
+#subPanel .subi.dis{color:#a8b0ba;cursor:not-allowed}
+#subPanel .subi em{margin-left:auto;font-style:normal;font-size:11px;color:#9aa4b1}
+#subPanel .subfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.mknote{margin-top:10px;padding:9px 11px;background:#eef4ff;border:1px solid #cfe0fb;border-radius:8px;font-size:12.5px;color:#2d5bb9;line-height:1.7}
 </style></head><body>
 <svg width='0' height='0' style='position:absolute' aria-hidden='true'><defs><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></symbol><symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M3 15h18M9.5 9.5V20"/></symbol><symbol id="i-hash" viewBox="0 0 24 24"><path d="M4.5 9h15M4.5 15h15M10 3.5 8 20.5M16 3.5l-2 17"/></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6.5 9.5V3.5h11v6M6.5 18h-3v-6.5a1.5 1.5 0 0 1 1.5-1.5h14a1.5 1.5 0 0 1 1.5 1.5V18h-3"/><rect x="6.5" y="14" width="11" height="7" rx="1.5"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.1 14.6a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5v.2a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1h.2a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-7.2l-1.9-2.2A1 1 0 0 0 10.1 5H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></symbol><symbol id="i-folder-open" viewBox="0 0 24 24"><path d="M4 7.5a1 1 0 0 1 1-1h4.6l1.9 2H19a1 1 0 0 1 1 1v1H4z"/><path d="M3.2 10.5h18l-1.9 8.7a1 1 0 0 1-1 .8H5.4a1 1 0 0 1-1-.8z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3.5 6.5h17M9 6.5V4.8A1.3 1.3 0 0 1 10.3 3.5h3.4A1.3 1.3 0 0 1 15 4.8v1.7M18.5 6.5l-.9 13a1.3 1.3 0 0 1-1.3 1.2H7.7a1.3 1.3 0 0 1-1.3-1.2l-.9-13M10.5 11v6M13.5 11v6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M12.5 20H21M16.8 3.7a2.1 2.1 0 0 1 3 3L8 18.5l-4 1 1-4z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.8"/><path d="M20.5 20.5 16 16"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 6L3.5 15.7M3.5 12a8.5 8.5 0 0 1 14.6-6l2.4 2.3"/><path d="M3.5 20V15.7h4.4M20.5 4v4.3h-4.4"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7.5 10.5 12 15l4.5-4.5M4.5 20.5h15"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17.3 4 12.1"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M8.3 12.4l2.6 2.6 4.8-5.3"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M15 9l-6 6M9 9l6 6"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4 2.2 18a1.9 1.9 0 0 0 1.7 2.9h16.2A1.9 1.9 0 0 0 21.8 18L13.7 4a1.9 1.9 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17.2h.01"/></symbol><symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.8-6.3L3.5 8.2"/><path d="M3.5 3.5v4.7h4.7"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M3.5 7.5v5.7h5.7"/><path d="M4.2 13.2A8.5 8.5 0 1 0 6.4 7.4L3.5 10.3"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.4" cy="6.6" r="1.4"/><circle cx="17.2" cy="10.4" r="1.4"/><circle cx="8.6" cy="7.4" r="1.4"/><circle cx="6.6" cy="12.4" r="1.4"/><path d="M12 2.8a9.2 9.2 0 1 0 0 18.4c.85 0 1.4-.65 1.4-1.4 0-.37-.16-.72-.4-1-.26-.28-.4-.63-.4-1 0-.77.63-1.4 1.4-1.4h1.9a5.6 5.6 0 0 0 5.6-5.6c0-4.6-4.2-8.4-9.5-8.4z"/></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol><symbol id="i-film" viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="17" rx="2.5"/><path d="M7.5 3.5v17M16.5 3.5v17M2.5 8.5h5M2.5 15.5h5M16.5 8.5h5M16.5 15.5h5"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.7" cy="9.7" r="1.7"/><path d="M3.5 17.5 9 12.5l4 4 3.2-3 4.3 4"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol><symbol id="i-external" viewBox="0 0 24 24"><path d="M14.5 4.5H20v5.5M19.5 5 12 12.5"/><path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></symbol><symbol id="i-download-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.5-9 6 6 0 0 1 11.6 1.6A3.7 3.7 0 0 1 17.5 18.5M12 12v8M8.8 16.8 12 20l3.2-3.2"/></symbol><symbol id="i-mark" viewBox="0 0 24 24"><rect x="2.6" y="6.8" width="6.6" height="10.4" rx="1.8"/><circle cx="5.9" cy="9.9" r="1.5"/><path d="M9.2 9.8h10.4v4.4H9.2"/><path d="M11.4 9.8v4.4M13.6 9.8v4.4M15.8 9.8v4.4M18 9.8v4.4"/></symbol></defs></svg>
 
@@ -880,7 +893,7 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
    <b>胶卷型号 / 相机</b> 可直接输入关键字（如 <code>400</code>）即时筛选下拉选项后再选中；输入的型号不在选项库里时会<b>标红</b>，点「确定」会询问是否跳转「选项设置」添加。<br>
    <b>拍摄状态</b>（拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档）存在 Excel 备注后一列，新条目默认「已归档」；目录视图会按状态给整行着色（「已归档」不高亮），颜色可在 <svg class="i"><use href="#i-settings"/></svg>  设置 里改。</div>
  </div>
- <div class="foot"><span style="margin-right:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:#5b6472"><button class="sec" id="edMkFolder" title="在胶卷目录（FILM）下创建这一卷的文件夹"><svg class="i"><use href="#i-folder"/></svg>  创建文件夹</button><button class="sec" id="edSyncFolder" title="把硬盘上这一卷的文件夹改名成与当前信息一致"><svg class="i"><use href="#i-refresh"/></svg>  同步文件夹名</button></span><button class="sec" id="edCancel">取消</button><button id="edOk">确定</button></div>
+ <div class="foot"><span style="margin-right:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:#5b6472"><button class="sec" id="edMkFolder" title="在胶卷目录（FILM）下创建这一卷的文件夹"><svg class="i"><use href="#i-folder"/></svg>  创建文件夹</button><button class="sec" id="edAddSub" style="display:none" title="给这一卷的文件夹添加标准子文件夹（已存在的会置灰不可选）"><svg class="i"><use href="#i-folder-open"/></svg>  添加子文件夹</button><button class="sec" id="edSyncFolder" title="把硬盘上这一卷的文件夹改名成与当前信息一致"><svg class="i"><use href="#i-refresh"/></svg>  同步文件夹名</button></span><button class="sec" id="edCancel">取消</button><button id="edOk">确定</button></div>
 </div></div>
 
 <div class="mask" id="cfMask"><div class="dlg">
@@ -1764,6 +1777,7 @@ var FIELDS = [
 ];
 var OPT = {cam:[],size:[],model:[]}, OPT_MAX = {cam:200,size:50,model:400}, RAWMAP = {}, NEXTSEQ = "001";
 var STATUSES = ["拍摄中", "待冲洗", "冲洗中", "待归档", "已归档"], ST_DEFAULT = "已归档";
+var PENDING_MK = null, PENDING_SUBS = [];
 var EMODE = "add", ESEQ = null, DLSEQ = null, DLCODE = "", CF_CB = null, CF_CANCEL = null, UNDO_T = null;
 
 function postJSON(url, obj){
@@ -2355,7 +2369,12 @@ async function submitForm(){
   }
   CF_FOLDER = await folderInfoOf(cells[0], guessName(cells));
   badgeApply($("edFolderBadge"), CF_FOLDER);
-  askConfirm(EMODE === "add" ? "确认新增条目" : ("确认修改条目 " + ESEQ), showDiff(EMODE, cells), async function(){
+  var mkNote = (EMODE === "add")
+    ? ('<div class="mknote">📁 保存后会自动创建文件夹：<b>' + esc(guessName(cells)) + '</b>' +
+       (PENDING_SUBS.length ? '<br>　 含子文件夹：<b>' + PENDING_SUBS.join("、") + '</b>' : '') +
+       '</div>')
+    : '';
+  askConfirm(EMODE === "add" ? "确认新增条目" : ("确认修改条目 " + ESEQ), showDiff(EMODE, cells) + mkNote, async function(){
     var lk = await checkLock(), force = false;
     if (lk.locked){ force = confirm(lockConfirmText(lk)); if (!force){ toast("已取消写入，请先关闭 Excel", 5000); return; } }
     var r;
@@ -2365,15 +2384,16 @@ async function submitForm(){
     } catch(e){ toast("⚠ 提交失败：" + e.message, 6000); return; }
     $("cfMask").classList.remove("on");
     if (!r.ok){ toast("⚠ " + r.msg, 7000); return; }
-    $("edMask").classList.remove("on");
+    /* 注意：这里不能清 PENDING_SUBS —— 下面「是否创建文件夹」还要用它 */
+    $("edMask").classList.remove("on"); closeSubPanel();
     toast("✓ " + r.msg + (r.verified ? "（已写入 Excel 并校验通过）" : "（已写入但校验未通过）") + statNote(), 4500);
     if (r.warn) setTimeout(function(){ toast(r.warn, 10000); }, 900);
     var ff = r.folder;
     if (EMODE === "add" && ff && !ff.exists){
       setTimeout(function(){
         var nm = ff.expected || guessName(cells);
-        var subs = false;   /* 子文件夹功能已暂时移除 */
-        if (!confirm("硬盘上还没有这一卷的文件夹：\n\n" + nm + "\n\n现在创建吗？")) return;
+        var subs = (EMODE === "add" ? PENDING_SUBS : false);   /* 新增模式：用记住的子文件夹 */
+        /* 已在第一屏确认过，这里直接创建，不再二次询问 */
         postJSON("/__mkdir", {cells: cells, subs: subs}).then(function(rr){
           if (rr.ok) toast((rr.existed ? "ℹ 文件夹本来就存在：" : "✓ 已创建文件夹：") + rr.name +
                            (rr.made && rr.made.length ? "（含子目录 " + rr.made.join(" / ") + "）" : ""), 7000);
@@ -2477,6 +2497,7 @@ async function refreshFolderState(){
   var edited = folderEdited(c);
   mk.disabled = !!f.exists;
   mk.textContent = f.exists ? "📁 文件夹已存在" : "📁 创建文件夹";
+  var asb = $("edAddSub"); if (asb) asb.style.display = f.exists ? "" : "none";   /* 有文件夹才显示「添加子文件夹」 */
   mk.title = f.exists ? ("该卷文件夹已存在，无需创建：" + f.found) : "在胶卷目录（FILM）下创建这一卷的文件夹";
   if (sf){
     sf.disabled = !f.exists || f.same;
@@ -2497,11 +2518,18 @@ function scheduleFolderState(){
 
 async function createFolder(){
   var c = folderCells(); if (!c) return;
-  var subs = false;   /* 子文件夹功能已暂时移除 */
   var name = guessName(c);
+  /* 新增模式：先记下，等条目保存成功后再真正建文件夹（避免取消后留下空文件夹） */
+  if (EMODE === "add"){
+    PENDING_MK = c;
+    toast("ℹ 已记下：保存条目时会自动创建文件夹「" + name + "」", 5500);
+    var mk0 = $("edMkFolder"); if (mk0){ mk0.textContent = "📁 保存时创建文件夹"; }
+  var asb0 = $("edAddSub"); if (asb0) asb0.style.display = "";   /* 新增模式：先记录，保存时一起建 */
+    return;
+  }
   if (!confirm("将在胶卷目录（FILM）下创建文件夹：\n\n" + name + "\n\n确定创建？")) return;
   var r;
-  try { r = await postJSON("/__mkdir", {cells:c, subs:subs}); }
+  try { r = await postJSON("/__mkdir", {cells:c, subs: []}); }   /* 手动创建时不带子文件夹 */
   catch(e){ toast("⚠ 创建失败：" + e.message, 6000); return; }
   if (!r.ok){ toast("⚠ " + r.msg, 9000); return; }
   toast((r.existed ? "ℹ 文件夹本来就存在：" : "✓ 已创建文件夹：") + r.name +
@@ -2509,6 +2537,84 @@ async function createFolder(){
   await refreshFolderState();
 }
 
+
+async function addSubFolder(){
+  var c = folderCells(); if (!c) return;
+  var name = guessName(c), info;
+  if (EMODE === "add"){
+    /* 新增模式：文件夹还没建，4 个都算「不存在」 */
+    if (!PENDING_MK){ toast("⚠ 请先点「📁 创建文件夹」", 6000); return; }
+    showSubPanel(Object.keys(SUB_DESC).map(function(x){
+      return {name: x, exists: PENDING_SUBS.indexOf(x) >= 0};
+    }), c, true);
+    return;
+  }
+  try { info = await folderInfoOf(String(c[0] || ""), name); }
+  catch(e){ toast("⚠ 读取文件夹信息失败：" + e.message, 6000); return; }
+  if (!info || !info.exists){ toast("⚠ 这一条还没有文件夹，请先点「创建文件夹」", 6500); return; }
+  showSubPanel(info.subs || [], c, false);
+}
+
+/* 子文件夹用途说明 */
+var SUB_DESC = {
+  "010_scan":     "扫描原片（店扫 / 平板扫描的原始文件）",
+  "011_scanPost": "扫描后期（调色修图后导出的成品）",
+  "020_cam":      "翻拍原片（用相机/手机翻拍的原始文件）",
+  "021_camPost":  "翻拍后期（调色修图后导出的成品）"
+};
+
+function closeSubPanel(){ var b = document.getElementById("subPanel"); if (b) b.remove(); }
+
+function showSubPanel(subs, c, addMode){
+  closeSubPanel();
+  var av = subs.filter(function(x){ return !x.exists; }).length;
+  var box = document.createElement("div"); box.id = "subPanel";
+  box.innerHTML = '<div class="subt">选择要创建的子文件夹　<span class="subhint">已存在的不可选</span></div>' +
+    '<label class="subi suball"><input type="checkbox" id="subAll"' + (av ? '' : ' disabled') + '>' +
+    '　全选可创建项</label>' +
+    subs.map(function(x){
+      var d = SUB_DESC[x.name] || "";
+      return '<label class="subi' + (x.exists ? ' dis' : '') + '">' +
+        '<input type="checkbox" value="' + x.name + '"' + (x.exists ? ' disabled checked' : '') + '>' +
+        '<span class="subn">' + x.name + '</span>' +
+        '<span class="subd">' + d + '</span>' +
+        (x.exists ? '<em>已存在</em>' : '') + '</label>';
+    }).join("") +
+    '<div class="subfoot"><button class="mini" id="subCancel">取消</button>' +
+    '<button class="mini" id="subGo">创建选中的</button></div>';
+  var mask = document.getElementById("edMask");
+  var foot = mask ? mask.querySelector(".foot") : null;
+  if (foot && foot.parentNode) foot.parentNode.insertBefore(box, foot);
+  else if (mask) mask.appendChild(box);
+  var all = document.getElementById("subAll");
+  if (all) all.onchange = function(){
+    box.querySelectorAll("input[type=checkbox]").forEach(function(i){
+      if (!i.disabled && i.id !== "subAll") i.checked = all.checked;
+    });
+  };
+  document.getElementById("subCancel").onclick = closeSubPanel;
+  if (addMode) document.getElementById("subGo").textContent = "记住选择";
+  document.getElementById("subGo").onclick = async function(){
+    var picked = [];
+    box.querySelectorAll("input[type=checkbox]").forEach(function(i){
+      if (i.checked && !i.disabled && i.id !== "subAll") picked.push(i.value);
+    });
+    if (!picked.length){ toast("请至少勾选一个子文件夹", 4000); return; }
+    if (addMode){
+      PENDING_SUBS = picked;
+      toast("ℹ 已记住：" + picked.join(" / ") + "　保存条目时会一并创建", 6500);
+      closeSubPanel();
+      return;
+    }
+    var r;
+    try { r = await postJSON("/__mkdir", {cells: c, subs: picked}); }
+    catch(e){ toast("⚠ 创建失败：" + e.message, 6000); return; }
+    if (!r.ok){ toast("⚠ " + r.msg, 8000); return; }
+    toast(r.made && r.made.length ? ("✓ 已创建子文件夹：" + r.made.join(" / ")) : "ℹ 选中的子文件夹都已存在", 6000);
+    closeSubPanel();
+    await refreshFolderState();
+  };
+}
 async function syncFolder(){
   var c = folderCells(); if (!c) return;
   var name = guessName(c);
@@ -2565,7 +2671,7 @@ async function doDelete(){
   catch(e){ toast("⚠ 删除失败：" + e.message, 6000); return; }
   $("dlMask").classList.remove("on");
   if (!r.ok){ toast("⚠ " + r.msg, 7000); return; }
-  $("edMask").classList.remove("on");
+  $("edMask").classList.remove("on"); closeSubPanel(); PENDING_MK = null; PENDING_SUBS = [];
   toast("✓ " + r.msg + (r.verified ? "（已写入 Excel 并校验通过）" : "") + statNote(), 4500);
   if (r.warn) setTimeout(function(){ toast(r.warn, 10000); }, 900);
   if (r.folder){
@@ -3710,6 +3816,7 @@ function bind(){
   $("edForm").addEventListener("input", scheduleFolderState);
   $("edForm").addEventListener("change", scheduleFolderState);
   $("edMkFolder").addEventListener("click", createFolder);
+  $("edAddSub").addEventListener("click", addSubFolder);
   $("edSyncFolder").addEventListener("click", syncFolder);
   $("btnIndexPrint").addEventListener("click", ipOpen);
   $("ipCloseX").addEventListener("click", function(){ if (!IP.run) $("ipMask").classList.remove("on"); });
@@ -3729,7 +3836,7 @@ function bind(){
   $("ipGo").addEventListener("click", ipRun);
   $("ipStop").addEventListener("click", function(){ IP.stop = true; this.disabled = true; toast("正在停止（等当前这卷写完）…", 3000); });
   $("ipOpenDir2").addEventListener("click", ipOpenDir);
-  $("edCancel").addEventListener("click", function(){ $("edMask").classList.remove("on"); });
+  $("edCancel").addEventListener("click", function(){ $("edMask").classList.remove("on"); closeSubPanel(); PENDING_MK = null; PENDING_SUBS = []; });
   $("edOk").addEventListener("click", submitForm);
   $("edDel").addEventListener("click", openDelete);
   $("cfNo").addEventListener("click", closeCf);
