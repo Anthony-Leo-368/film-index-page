@@ -3,7 +3,7 @@
 > 一个本地运行、用 Excel 当数据库、用浏览器当界面的胶卷整理与索引工具。
 > **数据不上传、不联网，全部存在你自己的硬盘里。**
 
-当前版本 **v1.0.1**　·　仅非商业使用（见 [LICENSE](LICENSE)）　·　macOS 已完整测试，Windows 可用
+当前版本 **v1.0.2**　·　仅非商业使用（见 [LICENSE](LICENSE)）　·　macOS 已完整测试，Windows 可用
 
 ---
 
@@ -26,7 +26,7 @@
 | 🎬 拍摄状态 | 拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档，整行上色，颜色可改 |
 | 🔍 搜索 | 关键字、`列:值`、`-排除`、日期范围，多个条件空格隔开 |
 | 📁 文件夹自动化 | 改了编号/型号/拍摄日期，保存时自动同步硬盘上的文件夹名；新增条目可一键创建文件夹 |
-| 🖨 Index Paper | 勾选胶卷批量导出可打印的 docx，每卷一张索引页 |
+| 🖨 Index Print | 勾选胶卷批量导出可打印的 docx，每卷一张索引页 |
 
 ## 截图
 
@@ -61,7 +61,7 @@
     ├── build_html.py          前端生成器 → index.html
     ├── index.html             生成好的页面
     ├── template.xlsx          空白数据库模板（首次运行自动复制成 films.xlsx）
-    ├── index_template.docx    Index Paper 的 docx 模板
+    ├── index_template.docx    Index Print 的 docx 模板
     ├── film_icons/            型号图标（96×77，列表用）
     └── film_icons_hd/         型号图标高清母版（悬停预览用）
 ```

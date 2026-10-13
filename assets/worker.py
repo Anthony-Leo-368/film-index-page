@@ -55,12 +55,12 @@ UNDO = os.path.join(BACKUP, "_undo.xlsx")
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 MISS = "-"
 MAXROWS = 300
-VERSION = "v1.0.1"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
+VERSION = "v1.0.2"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
 
 DEFAULT_SET = {"excel": "films.xlsx", "auto": True, "theme": "#4472c4", "throttle": 60,
                "imgOrder": "scan", "dateFmt": "iso", "thumb": True, "thumbQ": 1,
                "thumbMaxMB": 200,
-               "ipDir": "000_INDEX PAPER", "ipEdge": 1000, "ipQ": 76,
+               "ipDir": "000_INDEX PRINT", "ipEdge": 1000, "ipQ": 76,
                "ipRot": "cw", "ipSkip": True, "onePre": True, "folderSync": True, "showIcon": True,
                "colOrder": ["seq", "code", "model", "size", "cam", "lens", "d1", "d2", "dev",
                             "devnote", "da", "re", "na", "ia", "note", "name"],
@@ -1180,7 +1180,7 @@ def _run(cmd, timeout, env=None):
 
 def make_thumb(src, dst, edge, quality, rotate=0):
     """先生成到临时文件再原子替换，避免半截 JPEG 被当成缓存
-    rotate: 0=不动，90=顺时针 90°，-90=逆时针 90°（导出 Index Paper 竖图用）"""
+    rotate: 0=不动，90=顺时针 90°，-90=逆时针 90°（导出 Index Print 竖图用）"""
     tmp = "%s.%d.part" % (dst, threading.get_ident())
     try:
         if _make_thumb_to(src, tmp, edge, quality, rotate):
@@ -2057,15 +2057,15 @@ def serve_thumb(path_p, qs):
     with open(path_p, "rb") as fh:
         return fh.read(), MIME.get(ext, "application/octet-stream"), "no-store"
 
-# ==================== 导出 Index Paper（生成可打印的 docx） ====================
-# 规则（与 000_INDEX PAPER/ 里既有的 docx 保持一致）：
+# ==================== 导出 Index Print（生成可打印的 docx） ====================
+# 规则（与 000_INDEX PRINT/ 里既有的 docx 保持一致）：
 #   · 标题 = 胶卷文件夹名；表头两列三行：型号/编号、相机/拍摄日期、镜头/冲洗日期
 #   · 正文沿用模板里的「图片阵列」段落样式（制表位 2520 / 5040 / 7560 twips）
 #   · 135：每行 4 张，图片宽度 4.19cm；120：每行 3 张，图片宽度 5.59cm
 #   · 竖图（高 > 宽）旋转 90°；旋转后一律按宽度等比缩放，保证每张图宽度一致
 IP_ORDER = ["011_scanPost", "010_scan", "021_camPost"]
 IP_TPL_NAME = "index_template.docx"                       # assets/ 下的模板副本（优先）
-IP_TPL_FALLBACK = os.path.join(ROOT, "000_INDEX PAPER", "000_胶卷Index模板.docx")
+IP_TPL_FALLBACK = os.path.join(ROOT, "000_INDEX PRINT", "000_胶卷Index模板.docx")
 IP_PER_ROW = {"135": 4, "120": 3}
 IP_WIDTH_CM = {"135": 4.19, "120": 5.59}
 # 同一行图片之间的分隔：135 = 制表位；120 = 两个空格
@@ -2090,7 +2090,7 @@ def ip_template_path():
 
 def ip_out_dir():
     """导出目录：设置 ipDir（相对 FILM 目录，或绝对路径）"""
-    d = (load_settings().get("ipDir") or "000_INDEX PAPER").strip() or "000_INDEX PAPER"
+    d = (load_settings().get("ipDir") or "000_INDEX PRINT").strip() or "000_INDEX PRINT"
     return os.path.normpath(d if os.path.isabs(d) else os.path.join(ROOT, d))
 
 
@@ -2147,7 +2147,7 @@ def ip_date(v):
 
 
 def ip_tmp_root():
-    p = os.path.join(cache_root(), "indexpaper")
+    p = os.path.join(cache_root(), "indexprint")
     try:
         os.makedirs(p, exist_ok=True)
     except OSError:
@@ -2159,7 +2159,7 @@ def ip_parts():
     """读模板 docx（缓存）；改模板文件后自动重载"""
     tpl = ip_template_path()
     if not tpl:
-        raise RuntimeError("找不到 docx 模板：assets/%s 或 000_INDEX PAPER/000_胶卷Index模板.docx"
+        raise RuntimeError("找不到 docx 模板：assets/%s 或 000_INDEX PRINT/000_胶卷Index模板.docx"
                            % IP_TPL_NAME)
     key = (tpl, os.path.getmtime(tpl), os.path.getsize(tpl))
     with _docx_lock:
@@ -2497,7 +2497,7 @@ def folder_mkdir(cells, subs=False):
 
 
 def ip_build_docx(rec, opt, outdir=None):
-    """生成一份 Index Paper docx。返回结果字典（不抛异常）"""
+    """生成一份 Index Print docx。返回结果字典（不抛异常）"""
     t0 = time.time()
     seq = str(rec.get("seq") or "").strip()
     folder = ip_find_folder(seq, rec.get("name"))
@@ -2512,7 +2512,7 @@ def ip_build_docx(rec, opt, outdir=None):
         p = os.path.join(folder, s)
         if os.path.isdir(p):
             raw = sorted(f for f in os.listdir(p) if f.lower().endswith(IMG_EXT))
-            fs, tfs = split_thumbs(raw)          # 缩略图不进 Index Paper
+            fs, tfs = split_thumbs(raw)          # 缩略图不进 Index Print
             if fs:
                 sub, files = s, fs
                 break
@@ -2543,7 +2543,7 @@ def ip_build_docx(rec, opt, outdir=None):
     try:
         tmpdir = tempfile.mkdtemp(prefix="ip_", dir=ip_tmp_root())
     except OSError as e:                      # 系统缓存目录不可写：回退到系统临时目录
-        log("WARNING", "Index Paper：%s 不可写（%s），改用系统临时目录" % (ip_tmp_root(), e))
+        log("WARNING", "Index Print：%s 不可写（%s），改用系统临时目录" % (ip_tmp_root(), e))
         tmpdir = tempfile.mkdtemp(prefix="ip_")
     part = dst + ".part"
     media, rotated, failed = [], 0, 0
@@ -2558,7 +2558,7 @@ def ip_build_docx(rec, opt, outdir=None):
                     rr = 90 if rot == "cw" else -90
             if not make_thumb(src, tmp, edge, qual, rr):
                 failed += 1
-                log("WARNING", "Index Paper：降采样失败，跳过 %s（%s）" % (f, name))
+                log("WARNING", "Index Print：降采样失败，跳过 %s（%s）" % (f, name))
                 continue
             wh = img_size(tmp) or img_size(src)
             if not wh or not wh[0]:
@@ -2582,7 +2582,7 @@ def ip_build_docx(rec, opt, outdir=None):
             z.writestr("[Content_Types].xml", _ip_content_types())
         os.replace(part, dst)
         nb = os.path.getsize(dst)
-        log("INFO", "Index Paper：生成 %s（%d 张图，%s 每行 %d 张、宽 %.2fcm%s%s%s）耗时 %.1fs，%.1f MB"
+        log("INFO", "Index Print：生成 %s（%d 张图，%s 每行 %d 张、宽 %.2fcm%s%s%s）耗时 %.1fs，%.1f MB"
             % (name + ".docx", len(media), size or "135", per_row, w_cm,
                "，旋转 %d 张" % rotated if rotated else "",
                "，跳过 %d 张" % failed if failed else "",
@@ -2594,7 +2594,7 @@ def ip_build_docx(rec, opt, outdir=None):
                 "rows": (len(media) + per_row - 1) // per_row,
                 "bytes": nb, "seconds": round(time.time() - t0, 1)}
     except Exception as e:
-        log("ERROR", "Index Paper：生成 %s 失败：%s: %s" % (name, type(e).__name__, e))
+        log("ERROR", "Index Print：生成 %s 失败：%s: %s" % (name, type(e).__name__, e))
         return {"ok": False, "seq": seq, "msg": "%s: %s" % (type(e).__name__, e),
                 "hint": "若该 docx 正在 Word 里打开，请先关闭再重试"}
     finally:
@@ -2637,7 +2637,7 @@ def find_html():
     return p
 
 IMG_EXT = (".jpg", ".jpeg", ".png", ".heic", ".heif", ".hif")
-# 冲洗店给的缩略图 / 索引图：预览不显示、统计不计入、导出 Index Paper 不导出
+# 冲洗店给的缩略图 / 索引图：预览不显示、统计不计入、导出 Index Print 不导出
 THUMB_WORDS = ("thumb", "缩略")
 
 def split_thumbs(files):
@@ -2901,7 +2901,7 @@ class H(BaseHTTPRequestHandler):
                 self._json({"ok": True})
             elif path == "/__thumbclear":
                 self._json(thumb_clear())
-            elif path == "/__indexpaper":
+            elif path == "/__indexprint":
                 o = json.loads(body.decode("utf-8") or "{}")
                 seq = str(o.get("seq") or "").strip()
                 rec = None

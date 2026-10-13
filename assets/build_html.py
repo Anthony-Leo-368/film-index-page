@@ -22,7 +22,7 @@ SNAP = os.path.join(ASSETS, "snapshot.json")
 TPL = os.path.join(ASSETS, "template.xlsx")
 DEF_SET = {"excel": XLSX_NAME, "auto": True, "theme": "#4472c4", "throttle": 60,
            "imgOrder": "scan", "dateFmt": "iso", "thumb": True, "thumbQ": 1, "thumbMaxMB": 200,
-           "ipDir": "000_INDEX PAPER", "ipEdge": 1000, "ipQ": 76, "ipRot": "cw", "ipSkip": True,
+           "ipDir": "000_INDEX PRINT", "ipEdge": 1000, "ipQ": 76, "ipRot": "cw", "ipSkip": True,
            "onePre": True,
            "colOrder": ["seq", "code", "model", "size", "cam", "lens", "d1", "d2", "dev",
                         "devnote", "da", "re", "na", "ia", "note", "name"],
@@ -572,7 +572,7 @@ button:active:not(:disabled){transform:scale(.97)}
  .ta{width:100%;box-sizing:border-box;border:1px solid #ccd2da;border-radius:5px;padding:6px 8px;
      font:12.5px ui-monospace,Menlo,Consolas,monospace;line-height:1.7;resize:vertical}
  #edLock.hide{display:none}
- /* ---------- Index Paper 导出（右上角按钮 + 弹窗） ---------- */
+ /* ---------- Index Print 导出（右上角按钮 + 弹窗） ---------- */
  #floatBar{position:fixed;right:16px;bottom:18px;z-index:41;display:flex;gap:8px;align-items:center}
  #floatBar button{background:rgba(138,144,154,.96);color:#fff;border-radius:20px;padding:9px 15px;font-size:12.5px;
    border:1px solid rgba(255,255,255,.22);box-shadow:0 5px 16px rgba(0,0,0,.22);cursor:pointer}
@@ -583,7 +583,7 @@ button:active:not(:disabled){transform:scale(.97)}
  .iprow:last-child{border-bottom:0}
  .iprow:hover{background:#f4f7fd}
  .iprow.sel{background:#e9f1fd}
- .iprow input{flex:none;margin:0}
+ .iprow input{flex:none;margin:0;pointer-events:none}   /* 由整行处理点击，避免原生勾选框抢状态 */
  .iprow .q{color:#8a93a0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;min-width:24px}
  .iprow .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px}
@@ -670,12 +670,12 @@ button:active:not(:disabled){transform:scale(.97)}
      hsl(var(--h,210),74%,85%) 5px calc(100% - 5px),
      hsl(var(--h,210),52%,42%) calc(100% - 5px) 100%);
    box-shadow:0 0 0 1px hsl(var(--h,210),45%,60%),0 1px 2px rgba(0,0,0,.12);
-   transition:transform .13s ease, box-shadow .13s ease, filter .13s ease}
- .calbar:hover{transform:scale(1.055);z-index:6;filter:brightness(1.03);
+   transition:transform .18s cubic-bezier(0.25,1,0.5,1), box-shadow .18s cubic-bezier(0.25,1,0.5,1);will-change:transform}
+ .calbar:hover{transform:scale(1.045);z-index:6;
    box-shadow:0 0 0 1px hsl(var(--h,210),45%,48%),0 5px 14px rgba(0,0,0,.3)}
  .calbar.on{box-shadow:0 0 0 2px rgba(255,180,60,.95),0 1px 3px rgba(0,0,0,.25)}
  /* 同一卷在其他行也有：一起放大，表示它们是一个整体 */
- .calbar.hot{transform:scale(1.055);z-index:6;filter:brightness(1.03);
+ .calbar.hot{transform:scale(1.045);z-index:6;
    box-shadow:0 0 0 1px hsl(var(--h,210),45%,48%),0 5px 14px rgba(0,0,0,.3)}
  /* 跨行（跨出本行到下一行/上一行）的一端：只用虚线标注，去掉深色端帽 */
  .calbar.cl{border-top-left-radius:0;border-bottom-left-radius:0;
@@ -689,9 +689,12 @@ button:active:not(:disabled){transform:scale(.97)}
  .calbar.cl.cr{border-radius:0;
    background-image:linear-gradient(to right, hsl(var(--h,210),74%,85%) 0 100%)}
  .calbar[data-prog]::after{content:" " attr(data-prog);font-size:10px;opacity:.7}
- #caltip{position:fixed;z-index:80;left:0;top:0;display:none;max-width:380px;padding:9px 11px;
-   background:rgba(30,34,42,.96);color:#fff;font-size:12px;line-height:1.75;border-radius:8px;
-   box-shadow:0 8px 26px rgba(0,0,0,.38);white-space:pre-line;pointer-events:none}
+ #caltip{position:fixed;z-index:80;left:0;top:0;display:none;max-width:420px;padding:11px 14px;
+    background:rgba(255,255,255,.97);color:#1b1f24;font-size:12.5px;line-height:1.8;border-radius:11px;
+    border:1px solid #e3e8ef;
+    -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+    box-shadow:0 12px 34px rgba(16,24,40,.16), 0 2px 8px rgba(16,24,40,.08);
+    white-space:pre-line;pointer-events:none}
  #caltip.on{display:block}
  .calpre{background:#fafbfd;border-bottom:1px solid #e6e8eb}
  .calinfo{display:grid;grid-template-columns:repeat(auto-fill,minmax(216px,1fr));gap:1px 18px;
@@ -705,6 +708,19 @@ button:active:not(:disabled){transform:scale(.97)}
  .calinfo .cdel{background:#fdeeee;color:#c0392b;border:1px solid #f0c8c8}
  .calinfo .cdel:hover{background:#fbdcdc}
  .calempty{height:30px;line-height:30px;padding:0 12px;box-sizing:border-box;color:#9aa2ad;font-size:12.5px;overflow:hidden}
+/* ===== 日期范围：部分/完全 分段滑块 ===== */
+.dmwrap{display:inline-flex;align-items:center;gap:6px;flex:none;white-space:nowrap}
+.dmLbl{font-size:11px;color:#aab2bc}
+.dmseg{position:relative;display:inline-flex;align-items:center;background:#f1f4f8;
+ border-radius:9px;padding:3px;flex:none;vertical-align:middle}
+.dmseg .segslide{position:absolute;top:3px;left:0;height:calc(100% - 6px);width:0;background:#fff;
+ border-radius:7px;box-shadow:0 1px 2px rgba(16,24,40,.08);
+ transition:transform var(--d3) var(--e-out),width var(--d3) var(--e-out);pointer-events:none}
+.dmseg .dmbtn{position:relative;z-index:1;border:0!important;background:transparent!important;
+ color:#5b6572!important;border-radius:7px!important;font-weight:500;
+ padding:5px 12px!important;font-size:12px!important;box-shadow:none!important;cursor:pointer}
+.dmseg .dmbtn.on{color:#1b1f24!important;font-weight:600}
+.dmseg .dmbtn:hover{color:#1b1f24!important}
 /* ===== 收尾修正（放最后，确保覆盖）===== */
 /* 版本胶囊：灰色系 */
 .verpill{background:#eef1f5!important;color:#7a828c!important;font-weight:600}
@@ -790,13 +806,86 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
  display:inline-flex!important;align-items:center!important;justify-content:center!important;
  padding:0 10px!important;font-size:11.5px!important;line-height:1!important;
  white-space:nowrap!important;margin:0!important;flex:none!important}
+/* ===== iOS27 液态玻璃（加强版）：新增条目 / 收起预览 ===== */
+#floatBar button,#preBar button{
+  position:relative;
+  background:rgba(255,255,255,.26)!important;
+  -webkit-backdrop-filter:blur(44px) saturate(200%) brightness(1.12);
+  backdrop-filter:blur(44px) saturate(200%) brightness(1.12);
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:999px!important;
+  color:#1b1f24!important;font-weight:600;
+  box-shadow:
+    0 10px 30px rgba(16,24,40,.14),
+    0 2px 6px rgba(16,24,40,.07),
+    inset 0 1.5px 0 rgba(255,255,255,1),
+    inset 0 -2px 6px rgba(255,255,255,.38),
+    inset 0 0 0 1px rgba(255,255,255,.22)!important;
+  text-shadow:0 1px 1px rgba(255,255,255,.85), 0 0 1px rgba(16,24,40,.18)
+}
+/* 左上镜面高光 */
+#floatBar button::before,#preBar button::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(130% 95% at 16% -4%,
+    rgba(255,255,255,.95) 0%, rgba(255,255,255,.30) 28%,
+    rgba(255,255,255,.05) 52%, rgba(255,255,255,0) 70%);
+  mix-blend-mode:screen
+}
+/* 底部反光弧 */
+#floatBar button::after,#preBar button::after{
+  content:"";position:absolute;left:7%;right:7%;bottom:1px;height:42%;
+  border-radius:999px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.42) 100%);
+  filter:blur(5px)
+}
+#floatBar button:active,#preBar button:active{transform:scale(.96)}
+/* ===== 日历横条：毛玻璃 + 低饱和配色（试验）===== */
+/* 半透明低饱和填充 + 背景虚化，保留色相识别 */
+.calbar{
+  background:hsla(var(--h,210),36%,60%,.32)!important;
+  background-image:none!important;
+  -webkit-backdrop-filter:blur(10px) saturate(150%);
+  backdrop-filter:blur(10px) saturate(150%);
+  border:1px solid hsla(var(--h,210),38%,70%,.55)!important;
+  border-radius:7px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72), 0 1px 2px rgba(16,24,40,.08)!important;
+  color:hsl(var(--h,210),34%,30%)!important;
+  font-weight:600;font-size:12px;
+  transition:transform .18s cubic-bezier(0.25,1,0.5,1),box-shadow .18s cubic-bezier(0.25,1,0.5,1),background .15s cubic-bezier(0.25,1,0.5,1);will-change:transform
+}
+.calbar:hover{
+  background:hsla(var(--h,210),42%,58%,.52)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85), 0 3px 10px rgba(16,24,40,.14)!important
+}
+/* 选中的横条：提高不透明度但不刺眼 */
+.calbar.sel,.calbar.on,.calbar.calon{
+  background:hsla(var(--h,210),44%,56%,.62)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 2px hsla(var(--h,210),50%,62%,.45)!important
+}
+/* 进度标签同样降饱和 */
+.calbar::after{color:hsl(var(--h,210),38%,32%)}
+/* ===== 日历横条 v2：跨行端部（同色虚线）+ 平滑动效 ===== */
+/* 跨出的一端：平角 + 同色系虚线，表示「这卷还连着别的行」 */
+.calbar.cl{
+  border-left:2px dashed hsla(var(--h,210),46%,52%,.9)!important;
+  border-top-left-radius:0!important;border-bottom-left-radius:0!important;
+  background-image:none!important
+}
+.calbar.cr{
+  border-right:2px dashed hsla(var(--h,210),46%,52%,.9)!important;
+  border-top-right-radius:0!important;border-bottom-right-radius:0!important;
+  background-image:none!important
+}
+.calbar.cl.cr{border-radius:0!important}
+/* 去掉上一版的箭头 */
+.calbar.cl::before,.calbar.cr::before{content:none!important;display:none!important}
 </style></head><body>
 <svg width='0' height='0' style='position:absolute' aria-hidden='true'><defs><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></symbol><symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M3 15h18M9.5 9.5V20"/></symbol><symbol id="i-hash" viewBox="0 0 24 24"><path d="M4.5 9h15M4.5 15h15M10 3.5 8 20.5M16 3.5l-2 17"/></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6.5 9.5V3.5h11v6M6.5 18h-3v-6.5a1.5 1.5 0 0 1 1.5-1.5h14a1.5 1.5 0 0 1 1.5 1.5V18h-3"/><rect x="6.5" y="14" width="11" height="7" rx="1.5"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.1 14.6a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5v.2a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H10a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V10a1.6 1.6 0 0 0 1.5 1h.2a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-7.2l-1.9-2.2A1 1 0 0 0 10.1 5H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1z"/></symbol><symbol id="i-folder-open" viewBox="0 0 24 24"><path d="M4 7.5a1 1 0 0 1 1-1h4.6l1.9 2H19a1 1 0 0 1 1 1v1H4z"/><path d="M3.2 10.5h18l-1.9 8.7a1 1 0 0 1-1 .8H5.4a1 1 0 0 1-1-.8z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3.5 6.5h17M9 6.5V4.8A1.3 1.3 0 0 1 10.3 3.5h3.4A1.3 1.3 0 0 1 15 4.8v1.7M18.5 6.5l-.9 13a1.3 1.3 0 0 1-1.3 1.2H7.7a1.3 1.3 0 0 1-1.3-1.2l-.9-13M10.5 11v6M13.5 11v6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M12.5 20H21M16.8 3.7a2.1 2.1 0 0 1 3 3L8 18.5l-4 1 1-4z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.8"/><path d="M20.5 20.5 16 16"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 6L3.5 15.7M3.5 12a8.5 8.5 0 0 1 14.6-6l2.4 2.3"/><path d="M3.5 20V15.7h4.4M20.5 4v4.3h-4.4"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v11.5M7.5 10.5 12 15l4.5-4.5M4.5 20.5h15"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17.3 4 12.1"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M8.3 12.4l2.6 2.6 4.8-5.3"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M15 9l-6 6M9 9l6 6"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4 2.2 18a1.9 1.9 0 0 0 1.7 2.9h16.2A1.9 1.9 0 0 0 21.8 18L13.7 4a1.9 1.9 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17.2h.01"/></symbol><symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.8-6.3L3.5 8.2"/><path d="M3.5 3.5v4.7h4.7"/></symbol><symbol id="i-undo" viewBox="0 0 24 24"><path d="M3.5 7.5v5.7h5.7"/><path d="M4.2 13.2A8.5 8.5 0 1 0 6.4 7.4L3.5 10.3"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.4" cy="6.6" r="1.4"/><circle cx="17.2" cy="10.4" r="1.4"/><circle cx="8.6" cy="7.4" r="1.4"/><circle cx="6.6" cy="12.4" r="1.4"/><path d="M12 2.8a9.2 9.2 0 1 0 0 18.4c.85 0 1.4-.65 1.4-1.4 0-.37-.16-.72-.4-1-.26-.28-.4-.63-.4-1 0-.77.63-1.4 1.4-1.4h1.9a5.6 5.6 0 0 0 5.6-5.6c0-4.6-4.2-8.4-9.5-8.4z"/></symbol><symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol><symbol id="i-film" viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="17" rx="2.5"/><path d="M7.5 3.5v17M16.5 3.5v17M2.5 8.5h5M2.5 15.5h5M16.5 8.5h5M16.5 15.5h5"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.7" cy="9.7" r="1.7"/><path d="M3.5 17.5 9 12.5l4 4 3.2-3 4.3 4"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol><symbol id="i-external" viewBox="0 0 24 24"><path d="M14.5 4.5H20v5.5M19.5 5 12 12.5"/><path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"/></symbol><symbol id="i-download-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.5-9 6 6 0 0 1 11.6 1.6A3.7 3.7 0 0 1 17.5 18.5M12 12v8M8.8 16.8 12 20l3.2-3.2"/></symbol><symbol id="i-mark" viewBox="0 0 24 24"><rect x="2.6" y="6.8" width="6.6" height="10.4" rx="1.8"/><circle cx="5.9" cy="9.9" r="1.5"/><path d="M9.2 9.8h10.4v4.4H9.2"/><path d="M11.4 9.8v4.4M13.6 9.8v4.4M15.8 9.8v4.4M18 9.8v4.4"/></symbol></defs></svg>
 
 <header>
  <h1><svg class="i hdmark"><use href="#i-mark"/></svg>
 <span class="logo">Film Index Page</span>
-<span class="verpill" tabindex="0">v1.0.1<span class="vercard">__VERCARD__</span></span></h1>
+<span class="verpill" tabindex="0">v1.0.2<span class="vercard">__VERCARD__</span></span></h1>
  <span id="viewSw">
   <button id="vwList" class="on" title="目录视图（表格）"><svg class="i"><use href="#i-list"/></svg>  目录视图</button>
   <button id="vwCal" title="日历视图（按拍摄时间排布）"><svg class="i"><use href="#i-calendar"/></svg>  日历视图</button>
@@ -805,15 +894,20 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
  <span id="status">正在载入…</span>
  <span class="sp"></span>
  <input id="q" type="search" placeholder="搜索：关键字 / 相机 / 日期">
- <label class="hdlabel" for="dmode">日期搜索模式</label>
- <select id="dmode" title="日期范围的匹配方式（默认：部分包含）">
-  <option value="overlap">部分包含</option>
-  <option value="contain">完全包含</option>
+ <select id="dmode" style="display:none" title="日期范围的匹配方式">
+  <option value="overlap">部分</option>
+  <option value="contain">完全</option>
  </select>
+ <span class="dmwrap"><label class="hdlabel dmLbl">日期搜索模式：</label>
+ <span class="dmseg" id="dmSeg" title="日期范围的匹配方式（默认：部分）">
+  <i class="segslide"></i>
+  <button type="button" class="dmbtn on" data-v="overlap">部分</button>
+  <button type="button" class="dmbtn" data-v="contain">完全</button>
+ </span></span>
  <button id="qhelp" class="ghost" title="搜索语法说明">?</button>
  <button id="btnExcel" class="ghost" title="数据来源：载入中…"><svg class="i"><use href="#i-table"/></svg>  打开数据 Excel</button>
  <button id="btnCount" class="ghost" title="扫描各卷图片来源与张数（需读一遍文件夹，机械盘较慢；再点可停止）"><svg class="i"><use href="#i-hash"/></svg>  统计图片</button>
- <button id="btnIndexPaper" class="ghost" title="导出 Index Paper：勾选胶卷，批量生成可打印的索引 docx"><svg class="i"><use href="#i-printer"/></svg>  导出 Index Paper</button>
+ <button id="btnIndexPrint" class="ghost" title="导出 Index Print：勾选胶卷，批量生成可打印的索引 docx"><svg class="i"><use href="#i-printer"/></svg>  导出 Index Print</button>
  <button id="btnSync" title="重新读取 Excel（不遍历胶卷文件夹）">⟳ 同步</button>
  <button id="btnSet" class="ghost" title="设置"><svg class="i"><use href="#i-settings"/></svg>  设置</button>
 </header>
@@ -1039,7 +1133,7 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
 </div></div>
 
 <div class="mask" id="ipMask"><div class="dlg wide">
- <h2><svg class="i"><use href="#i-printer"/></svg>  导出 Index Paper（生成可打印的 docx）<span class="hbtnwrap"><button class="hbtn" id="ipCloseX" title="关闭"><svg class="i"><use href="#i-x"/></svg>  关闭</button></span></h2>
+ <h2><svg class="i"><use href="#i-printer"/></svg>  导出 Index Print（生成可打印的 docx）<span class="hbtnwrap"><button class="hbtn" id="ipCloseX" title="关闭"><svg class="i"><use href="#i-x"/></svg>  关闭</button></span></h2>
  <div class="body">
   <div id="ipStep1">
    <div class="hint">
@@ -3669,6 +3763,23 @@ function bind(){
     if (!bar) return;                 /* 一道里有多个横条时，得点到具体那条 */
     e.preventDefault();
     togglePreview(bar, host);         /* 单击开、再单击关；已在其他行开过则把面板搬过来 */
+    /* 预览打开时，把这一卷在所有行的横条一起高亮（.hot） */
+    (function(){
+      var seq = bar.getAttribute("data-seq");
+      /* 预览面板是异步创建的，轮询等它出现再高亮（最多等 1.5s） */
+      (function(){
+        var tries = 0;
+        var t = setInterval(function(){
+          tries++;
+          var has = !!document.querySelector(".calpre");
+          if (has || tries > 15){
+            barHot(has ? seq : null);          /* 悬停放大（同卷一起） */
+            calOn(has ? seq : null);           /* 颜色变深（同卷一起）★ */
+            clearInterval(t);
+          }
+        }, 100);
+      })();
+    })();
   });
   $("calBody").addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("button.cedit, button.cdel") : null;
@@ -3687,7 +3798,7 @@ function bind(){
   $("edForm").addEventListener("change", scheduleFolderState);
   $("edMkFolder").addEventListener("click", createFolder);
   $("edSyncFolder").addEventListener("click", syncFolder);
-  $("btnIndexPaper").addEventListener("click", ipOpen);
+  $("btnIndexPrint").addEventListener("click", ipOpen);
   $("ipCloseX").addEventListener("click", function(){ if (!IP.run) $("ipMask").classList.remove("on"); });
   $("ipClose2").addEventListener("click", function(){ if (!IP.run) $("ipMask").classList.remove("on"); });
   $("ipMask").addEventListener("click", function(e){ if (e.target === this && !IP.run) this.classList.remove("on"); });
@@ -4349,7 +4460,6 @@ function calTip(it){
   if (d.dev) L.push("冲扫：" + d.dev + (d.devnote ? "（" + d.devnote + "）" : ""));
   if (d.note) L.push("备注：" + d.note);
   L.push("");
-  L.push("双击 = 展开预览");
   return L.join("\n");
 }
 /* 某卷在本行内的槽位区间（天轴连续；只有超出本行时才算被截断） */
@@ -4471,6 +4581,14 @@ function barHot(seq){
     else b.classList.remove("hot");
   }
 }
+function calOn(seq){
+  /* 打开预览的那一卷：把它在所有行的横条一起「变深」，表示是同一卷 */
+  var all = document.querySelectorAll("#calBody .calbar");
+  for (var i = 0; i < all.length; i++){
+    var b = all[i];
+    b.classList.toggle("calon", !!(seq && b.getAttribute("data-seq") === seq));
+  }
+}
 function ctipBind(){
   var body = $("calBody"); if (!body) return;
   body.addEventListener("mouseover", function(e){
@@ -4490,7 +4608,7 @@ function ctipBind(){
     if (e.target.closest ? e.target.closest(".calbar") : null){ ctipHide(); barHot(null); }
   });
   body.addEventListener("dblclick", function(){ ctipHide(); barHot(null); });
-  if ($("calWrap")) $("calWrap").addEventListener("scroll", function(){ ctipHide(); barHot(null); }, {passive: true});
+  if ($("calWrap")) $("calWrap").addEventListener("scroll", function(){ ctipHide(); /* 预览面板开着时不要清掉同卷高亮 */ if (!document.querySelector(".calpre")){ barHot(null); calOn(null); } }, {passive: true});
 }
 
 /* ---------- 虚拟滚动：只渲染视窗附近的行，滚出 5 秒后丢弃 ---------- */
@@ -4721,8 +4839,8 @@ function calStep(dir){
 function calInfoHtml(d){
   var cols = visibleCols(), out = [];
   out.push('<div class="ciabc">' +
-    '<button class="mini2 cedit" data-seq="' + esc(d.seq) + '" title="编辑该条目（与目录视图同一个编辑窗）">✏ 编辑</button>' +
-    '<button class="mini2 cdel" data-seq="' + esc(d.seq) + '" title="删除该条目（与目录视图同一个确认流程）">🗑 删除</button>' +
+    ic('<button class="mini2 cedit" data-seq="' + esc(d.seq) + '" title="编辑该条目（与目录视图同一个编辑窗）">✏ 编辑</button>') +
+    ic('<button class="mini2 cdel" data-seq="' + esc(d.seq) + '" title="删除该条目（与目录视图同一个确认流程）">🗑 删除</button>') +
     '</div>');
   cols.forEach(function(k){
     var v = String(cellText(k, d) == null ? "" : cellText(k, d));
@@ -4732,7 +4850,7 @@ function calInfoHtml(d){
   return out.join("");
 }
 
-/* ---------- 导出 Index Paper（批量生成可打印 docx） ---------- */
+/* ---------- 导出 Index Print（批量生成可打印 docx） ---------- */
 var IP = { view: [], sel: {}, anchor: -1, run: false, stop: false, exists: {}, rec: {}, dirRel: "" };
 
 function ipRecs(){ return DATA.filter(function(d){ return d && d.seq != null && d.seq !== ""; }); }
@@ -4807,6 +4925,32 @@ function ipAllSelList(){
   return out;
 }
 
+  /* 日期范围分段滑块：按钮驱动隐藏的 #dmode，复用原有 change -> render */
+  (function(){
+    var seg = document.getElementById('dmSeg'), sel = document.getElementById('dmode');
+    if (!seg || !sel) return;
+    var slide = seg.querySelector('.segslide');
+    function pos(){
+      var on = seg.querySelector('.dmbtn.on'); if (!on) { slide.style.width='0px'; return; }
+      slide.style.width = on.offsetWidth + 'px';
+      slide.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+    }
+    function sync(){
+      var v = sel.value || 'overlap';
+      seg.querySelectorAll('.dmbtn').forEach(function(b){ b.classList.toggle('on', b.dataset.v === v); });
+      pos();
+    }
+    seg.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('.dmbtn') : null; if (!b) return;
+      if (sel.value === b.dataset.v) return;
+      sel.value = b.dataset.v;
+      sync();
+      sel.dispatchEvent(new Event('change'));
+    });
+    setTimeout(pos, 60); setTimeout(pos, 400);
+    window.addEventListener('resize', pos);
+    sync();
+  })();
 function ipClick(e){
   var row = e.target.closest ? e.target.closest(".iprow") : null;
   if (!row || row.dataset.i === undefined) return;
@@ -4872,7 +5016,7 @@ async function ipRun(){
     $("ipRunTitle").innerHTML = "正在生成 <b>" + (i + 1) + " / " + seqs.length + "</b>　" + esc(d.name || seq);
     $("ipBarFill").style.width = (i / seqs.length * 100).toFixed(1) + "%";
     try {
-      var r = await postJSON("/__indexpaper", { seq: seq, edge: o.edge, q: o.q, rot: o.rot, skip: o.skip });
+      var r = await postJSON("/__indexprint", { seq: seq, edge: o.edge, q: o.q, rot: o.rot, skip: o.skip });
       if (r && r.ok){
         if (r.skipped){ sk++; ipLine("sk", "⏭ 已存在，跳过　" + esc(r.file)); }
         else {
