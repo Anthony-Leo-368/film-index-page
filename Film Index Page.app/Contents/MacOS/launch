@@ -1,0 +1,47 @@
+#!/bin/bash
+# Film Index Page 启动器
+#   找安装目录：1) 上次记住的  2) app 同级目录  3) 弹文件夹选择框
+#   选好后记住，下次直接打开。服务跑在可见终端窗口里，关窗即停。
+
+APP_NAME="Film Index Page"
+MARKER="010_启动Mac.command"
+CONF_DIR="$HOME/Library/Application Support/FilmIndexPage"
+CONF="$CONF_DIR/install_path.txt"
+
+valid() {
+  [ -n "$1" ] && [ -d "$1" ] && [ -f "$1/$MARKER" ]
+}
+
+SELF_APP="$(cd "$(/usr/bin/dirname "$0")/../../.." 2>/dev/null && pwd)"
+NEAR=""
+[ -n "$SELF_APP" ] && NEAR="$(/usr/bin/dirname "$SELF_APP")"
+
+TARGET=""
+if [ -f "$CONF" ]; then
+  TARGET="$(/bin/cat "$CONF" 2>/dev/null | /usr/bin/tr -d '\n')"
+fi
+valid "$TARGET" || TARGET="$NEAR"
+
+if ! valid "$TARGET"; then
+  FIRST=1
+  while true; do
+    if [ "$FIRST" = "1" ]; then
+      MSG="找不到软件目录（可能被移动了）。请选择「胶卷索引信息」所在的文件夹 —— 里面应该有 $MARKER 和 assets 文件夹。"
+      FIRST=0
+    else
+      MSG="这个文件夹里没有 $MARKER，不是软件目录。请重新选择。"
+    fi
+    PICK="$(/usr/bin/osascript -e "POSIX path of (choose folder with prompt \"$MSG\")" 2>/dev/null)"
+    [ -z "$PICK" ] && exit 0
+    PICK="$(printf '%s' "$PICK" | /usr/bin/sed 's:/*$::')"
+    if valid "$PICK"; then
+      TARGET="$PICK"
+      break
+    fi
+  done
+fi
+
+/bin/mkdir -p "$CONF_DIR" 2>/dev/null
+printf '%s' "$TARGET" > "$CONF" 2>/dev/null
+/usr/bin/open -a Terminal "$TARGET/$MARKER"
+exit 0
