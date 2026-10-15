@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang='zh-CN'><head><meta charset='utf-8'><style>@page{size:A4;margin:15mm 14mm}body{font:13.5px -apple-system,'PingFang SC',sans-serif;color:#222;line-height:1.85}h1{font-size:25px;margin:0 0 14px;padding-bottom:10px;border-bottom:3px solid #4472c4}h2{font-size:18px;margin:26px 0 10px;color:#3059a6;border-left:4px solid #4472c4;padding-left:9px}h3{font-size:15px;margin:18px 0 8px}table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}th,td{border:1px solid #d8dde5;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef3fb;font-weight:600}code{background:#f0f3f7;padding:1px 5px;border-radius:4px;font-size:12px}.callout{border-radius:8px;padding:10px 13px;margin:12px 0;font-size:12.8px}.callout .ct{font-weight:700;margin-bottom:4px}.callout.info{background:#eef4fd;border-left:4px solid #4472c4}.callout.tip{background:#eef9f0;border-left:4px solid #34a853}.callout.warning{background:#fdf3f3;border-left:4px solid #d6452d}figure{margin:14px 0;text-align:center}figure img{max-width:100%;border:1px solid #dfe3e8;border-radius:6px}ul{margin:8px 0 8px 20px}.dl{border:3px solid #d6452d;border-radius:10px;padding:16px 18px;margin:0 0 22px;background:#fff8f6}.dl .dlt{font-size:20px;font-weight:700;color:#d6452d;margin-bottom:8px}.dl .dll{font-size:19px;font-weight:700;line-height:1.6;word-break:break-all}.dl .dll a{color:#1a56b0;text-decoration:none}.dl .dln{font-size:12px;color:#8a8378;margin-top:8px}</style></head><body><div class="dl"><div class="dlt">📥 软件下载（最新版 v1.0.3）</div><div class="dll"><a href="https://www.jianguoyun.com/p/DSKDf6cQ07D8CxjElasGIAA">https://www.jianguoyun.com/p/DSKDf6cQ07D8CxjElasGIAA</a></div><div class="dln">点开上面链接即可下载；若链接失效，请在笔记下方留言。</div></div><h1>胶卷索引软件 · 使用说明</h1>
+<div class="callout info"><div class="ct">这是什么</div><p>一个在<b>你自己电脑上本地运行</b>的胶卷整理与索引工具：用 Excel 当数据库，用浏览器当界面。<br>数据不上传、不联网，全部存在你自己的硬盘里。</p></div>
+<div class="callout tip"><div class="ct">一句话上手</div><p>把软件文件夹放进你的胶卷根目录 → 双击 <code>010_启动Mac.command</code> → 浏览器自动打开 → 点「➕ 新增条目」开始录入。</p></div>
+<hr>
+<h2>一、它能做什么</h2>
+<table><thead><tr><th>能力</th><th>说明</th></tr></thead><tbody><tr><td>📋 目录视图</td><td>一张表列出所有胶卷：序号、编号、型号、画幅、相机、拍摄起止、备注、文件夹名……列可以自己调、可以排序</td></tr><tr><td>🔍 搜索筛选</td><td>支持关键字、<code>列:值</code>、<code>-排除</code>、日期范围，还能「只看日期异常」</td></tr><tr><td>🗓 日历视图</td><td>按拍摄时间把每一卷画成一条横条，可按相机分道，周视图 / 月视图自由切换</td></tr><tr><td>🎞 胶卷图标</td><td>内置 213 款胶卷型号的实物图，目录视图里每条左边显示；型号下拉框里也带图标；<b>鼠标悬停图标会弹出高清大图</b></td></tr><tr><td>📁 文件夹自动化</td><td>改了编号 / 型号 / 拍摄日期，保存时自动同步硬盘上的文件夹名（找不到或重名则不改）；新增条目可一键创建文件夹</td></tr><tr><td>🖼 预览与大图</td><td>点「预览」看整卷缩略图；点开可放大、旋转、翻页、下载</td></tr><tr><td>✏️ 增删改</td><td>直接在网页里新增、编辑、删除条目，写入前有差异确认，30 秒内可撤回</td></tr><tr><td>🎞 拍摄状态</td><td>给胶卷标「拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档」，目录视图整行高亮</td></tr><tr><td>🖨 导出 Index Print</td><td>勾选胶卷，按模板批量生成可打印的索引 docx</td></tr><tr><td>⚙ 设置</td><td>主题色、显示列、缩略图质量、图片来源优先级、状态颜色等都能改</td></tr></tbody></table>
+<hr>
+<h2>二、运行环境</h2>
+<div class="callout warning"><div class="ct">兼容性说明</div><p>目前<b>只在 macOS 上完整测试过</b>，Windows 版本可用但尚未测试，遇到问题请反馈。</p></div>
+<ul><li><b>macOS</b>：系统自带 Python 3，<b>无需额外安装</b>。图片降采样用系统自带的 <code>sips</code>。</li><li><b>Windows</b>：需要先安装 Python 3（安装时务必勾选 <b>Add Python to PATH</b>）。图片降采样用系统自带 PowerShell。</li><li>浏览器建议用 <b>Safari</b>（macOS 的「打开文件夹」功能依赖 Safari；Chrome / Edge 出于安全策略无法跳转本地文件夹）。</li></ul>
+<hr>
+<h2>三、目录结构与安装</h2>
+<h3>3.1 需要的目录结构</h3>
+<p>软件靠「文件夹层级」找到你的胶卷。把软件文件夹 <code>000_Film_Index_Page</code> <b>放进你的胶卷根目录</b>，和各卷文件夹并排：</p>
+<p>~~~text</p>
+<p>我的照片/FILM/                     ← 胶卷根目录（名字随意）</p>
+<p>├─ 000_Film_Index_Page/                ← 软件本体（放这里）</p>
+<p>│   ├─ 010_启动Mac.command</p>
+<p>│   ├─ 011_启动Win.bat</p>
+<p>│   └─ assets/                     ← 数据与程序都在这里</p>
+<p>├─ 001_index 3302_FOMAPAN 100_240402-240403/   ← 名字必须与软件生成的一致</p>
+<p>│   ├─ 010_scan/                   ← 冲扫店的扫描图</p>
+<p>│   ├─ 011_scanPost/               ← 扫描后期图（如 TIFF → LR 导出 jpg）</p>
+<p>│   ├─ 020_cam/                    ← 翻拍 RAW / 去色罩源文件（软件不读取）</p>
+<p>│   └─ 021_camPost/                ← 翻拍后期成片（软件读取）</p>
+<p>└─ 002_index ...</p>
+<p>~~~</p>
+<div class="callout warning"><div class="ct">子目录名是写死的，请勿改名</div><p>软件只认这三个名字，<b>必须完全一致</b>，改成别的名字就找不到图片：<br>- <code>010_scan</code>：冲扫店发来的扫描图（jpg）<br>- <code>011_scanPost</code>：扫描后期图——例如自己扫了 TIFF，用 Lightroom 导出成 jpg 放这里<br>- <code>021_camPost</code>：翻拍后期成片——翻拍处理完、导出的可看照片<br><br>另有 <code>020_cam</code>：用于存放翻拍的相机 RAW 与去色罩源文件；这类文件无法直接观看，软件<b>故意不读取</b>它。请把处理后的成片导出到 <code>021_camPost</code>。<br><br>预览取图顺序：扫描 = <code>011_scanPost → 010_scan</code>，翻拍 = <code>021_camPost</code>，可在预览面板切换来源。</p></div>
+<div class="callout info"><div class="ct">胶卷文件夹名必须与软件生成的一致</div><p>各卷文件夹名（例如 <code>001_index 3302_FOMAPAN 100_240402-240403</code>）由软件按「序号 / 编号 / 型号 / 拍摄开始 / 拍摄结束」自动生成，格式为：<br><code>&lt;序号&gt;_index &lt;编号&gt;_&lt;型号&gt;_&lt;YYMMDD&gt;[-&lt;YYMMDD&gt;]</code><br><b>磁盘上的文件夹必须与这个名字完全一致（含空格）</b>，软件才能定位到里面的图片；名字对不上时，列表里还能列出行，但点「预览」会提示找不到图片。<br>唯一例外：导出 Index Print 时，若名字对不上，软件会退一步按「<code>&lt;序号&gt;_index</code>」前缀去找文件夹。<br>建议流程：先在软件里新增条目 → 复制它生成的文件夹名 → 再据此命名磁盘上的文件夹。</p></div>
+<h3>3.2 首次启动（macOS，已测试）</h3>
+<p>1. 双击 <code>010_启动Mac.command</code>。</p>
+<p>2. 若提示<b>「无法打开，因为来自身份不明的开发者」</b>：</p>
+<ul><li>在文件上<b>右键 → 打开 → 再点「打开」</b>；或到 <b>系统设置 → 隐私与安全性</b>，点「仍要打开」。</li></ul>
+<p>3. 终端窗口会出现一个地址（形如 <code>http://127.0.0.1:xxxxx/</code>），并自动用 Safari 打开页面。</p>
+<p>4. 用完直接关闭终端窗口，服务即停止，数据不会丢。</p>
+<div class="callout info"><div class="ct">首次运行会自动建库</div><p>第一次启动时，如果还没有数据文件，软件会<b>自动用自带模板生成一个空白数据库</b>（<code>assets/films.xlsx</code>），不需要你手动准备 Excel。之后你录入的内容都写进这个文件。</p></div>
+<h3>3.3 首次启动（Windows，尚未测试）</h3>
+<p>1. 到 python.org 安装 Python 3.x，<b>务必勾选 Add Python to PATH</b>。</p>
+<p>2. 双击 <code>011_启动Win.bat</code>。</p>
+<hr>
+<h2>三之二、正确使用顺序（推荐）</h2>
+<p>很多用户第一次上手时会先建文件夹再登记，其实更顺的做法是<b>先在网页里登记，再建文件夹，最后移照片</b>。</p>
+<ol>
+<li><b>放好软件</b>：把「000_Film_Index_Page」整个文件夹放进你的「胶卷根目录」，和各卷文件夹并排。</li>
+<li><b>在网页里登记胶卷</b>：点右上角「＋ 新增条目」，填序号（3~4 位数字、唯一）、胶卷型号（必填）、拍摄开始（必填）等，填完点「确定」。</li>
+<li><b>建文件夹</b>：在编辑／新增条目窗口底部点「📁 创建文件夹」，会按你填的信息自动生成这一卷的文件夹（例如 <code>124_index 1234_FOMAPAN 100_261013</code>）。再点「📁 添加子文件夹」勾选要建的标准子文件夹 —— 已经存在的会自动置灰不可选，点「全选可创建项」再「创建选中的」即可。</li>
+<li><b>把照片移进来</b>：最后把要整理的照片移动到对应子文件夹。放好后回到网页点该行「预览」就能看图。</li>
+</ol>
+<table style="border-collapse:collapse;margin:10px 0">
+<tr style="background:#f6f3ec"><th style="border:1px solid #e2ddd0;padding:6px 12px;text-align:left">子文件夹</th><th style="border:1px solid #e2ddd0;padding:6px 12px;text-align:left">放什么</th></tr>
+<tr><td style="border:1px solid #e2ddd0;padding:6px 12px"><code>010_scan</code></td><td style="border:1px solid #e2ddd0;padding:6px 12px">扫描原片 —— 店扫／平板扫出来的原始文件　<b>★ 只有扫描件的话，只建这个就够</b></td></tr>
+<tr><td style="border:1px solid #e2ddd0;padding:6px 12px"><code>011_scanPost</code></td><td style="border:1px solid #e2ddd0;padding:6px 12px">扫描后期 —— 修图调色后导出的成品</td></tr>
+<tr><td style="border:1px solid #e2ddd0;padding:6px 12px"><code>020_cam</code></td><td style="border:1px solid #e2ddd0;padding:6px 12px">翻拍原片 —— 用相机／手机翻拍的原始文件</td></tr>
+<tr><td style="border:1px solid #e2ddd0;padding:6px 12px"><code>021_camPost</code></td><td style="border:1px solid #e2ddd0;padding:6px 12px">翻拍后期 —— 翻拍后修图导出的成品</td></tr>
+</table>
+<p><b>只有扫描件的情况（大多数人）</b>：建子文件夹时只勾 <code>010_scan</code>，照片全部放进它里面就行。</p>
+<p>先把文件夹建好再移照片最省事；顺序反了也不会出错，只是要自己手动建文件夹。</p>
+<h2>四、界面总览</h2>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/01_界面总览.jpg"></figure>
+<table><thead><tr><th>编号</th><th>位置</th><th>作用</th></tr></thead><tbody><tr><td>1</td><td>目录视图 / 日历视图</td><td>切换两种主视图</td></tr><tr><td>2</td><td>搜索框</td><td>输入关键字或语法筛选（见 5.2）</td></tr><tr><td>3</td><td>日期搜索模式</td><td>「部分包含」（区间有重叠就算）或「完全包含」</td></tr><tr><td>4</td><td>?</td><td>展开搜索语法帮助</td></tr><tr><td>5</td><td>打开数据 Excel</td><td>用系统默认程序打开 <code>films.xlsx</code></td></tr><tr><td>6</td><td>统计图片</td><td>扫描各卷图片张数（机械硬盘较慢，可再点停止）</td></tr><tr><td>7</td><td>导出 Index Print</td><td>批量生成可打印索引 docx（见 5.9）</td></tr><tr><td>8</td><td>同步</td><td>重新读取 Excel（不遍历胶卷文件夹）</td></tr><tr><td>9</td><td>设置</td><td>打开设置面板（见 5.8）</td></tr><tr><td>10</td><td>➕ 新增条目</td><td>新增一卷（见 5.5）</td></tr><tr><td>11</td><td>表头</td><td>点击表头可按该列排序；列宽可拖动</td></tr><tr><td>12</td><td>操作列</td><td>预览 / 编辑 / 打开文件夹</td></tr></tbody></table>
+<hr>
+<h2>五、功能详解</h2>
+<h3>5.1 目录视图</h3>
+<ul><li>每一行是一卷胶卷；<b>默认按序号从大到小排</b>（最新一卷在最上面）。点表头可按该列排序，再点一次切换升 / 降序。</li><li><b>列宽</b>可以拖动；双击列边缘可按内容自动适应宽度。</li><li>右侧「操作」列：<b>预览</b>（展开该卷图片）、<b>编辑</b>（修改）、<b>打开文件夹</b>（用访达打开该卷目录）。</li><li>显示哪些列、列的顺序，都可以在 <b>⚙ 设置 → 显示</b> 里调整。</li></ul>
+<h3>5.2 搜索</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/02_搜索.jpg"></figure>
+<p>在搜索框输入即可实时筛选。常用语法：</p>
+<table><thead><tr><th>写法</th><th>含义</th></tr></thead><tbody><tr><td><code>Nikon</code></td><td>任意字段包含 Nikon</td></tr><tr><td><code>相机:Nikon</code></td><td>只搜「相机」列</td></tr><tr><td><code>型号:"Gold 200"</code></td><td>值里有空格时用引号</td></tr><tr><td><code>-Nikon</code></td><td>排除包含 Nikon 的结果</td></tr><tr><td><code>日期:240808-240909</code></td><td>拍摄区间在 2024-08-08 ~ 2024-09-09 内</td></tr><tr><td><code>240901</code></td><td>单日</td></tr><tr><td><code>241001~</code></td><td>开区间（2024-10-01 之后）</td></tr><tr><td><code>日期:2024-08-08~2024-09-09</code></td><td>完整日期写法</td></tr></tbody></table>
+<ul><li>中英文列名都能用；全角数字 / 全角冒号会自动纠正。</li><li>搜索框右边的<b>日期搜索模式</b>决定区间怎么算：<b>部分包含</b>（默认，只要时间段有重叠）或<b>完全包含</b>。</li><li>点搜索框旁的 <b>?</b> 可以随时查看完整语法：</li></ul>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/03_搜索语法.jpg"></figure>
+<h3>5.3 日历视图</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/04_日历视图.jpg"></figure>
+<p>1. <b>视图切换</b>：左上角在 <b>📋 目录视图 / 🗓 日历视图</b> 之间切换。</p>
+<p>2. <b>日历工具栏</b>：切换 <b>周视图 / 月视图</b>，调整「每行」显示多少，用 ◀ 今天 ▶ 跳转，右侧显示当前日期范围。</p>
+<p>3. <b>按相机分道</b>：每台相机一整行；每一卷是一条横条，长度 = 拍摄区间。同一天的胶卷一目了然，特别适合看「哪段时间拍得多、哪台机器在轮换」。</p>
+<div class="callout tip"><div class="ct">更多</div><p>- <b>单击横条</b>即可展开预览；日历里同样可以编辑 / 删除。<br>- 纵向连续滚动，搜索框会同时过滤日历。</p></div>
+<h3>5.4 预览与大图</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/05_预览面板.jpg"></figure>
+<ul><li>点某行的「预览」展开该卷所有图片；再点「收起」关闭。</li><li>面板顶部是<b>预览来源</b>：<code>扫描</code> / <code>翻拍</code> 一键切换。</li><li>只对<b>当前这一卷</b>生效，刷新页面后回到设置里的默认来源。</li><li>某卷只有单一来源时，另一种按钮会<b>置灰</b>，高亮的是该卷实际使用的来源。</li><li>点任意缩略图进入<b>大图查看器</b>：</li></ul>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/06_大图查看器.jpg"></figure>
+<p>大图查看器支持：放大 / 缩小、左转 / 右转、复位、<b>上一张 / 下一张</b>、<b>下载</b>、打开所在位置；也可以用鼠标拖动、滚轮缩放、双击放大。</p>
+<div class="callout tip"><div class="ct">为什么预览有时要等一两秒</div><p>预览用的是<b>降采样小图</b>并做了缓存（存在系统缓存目录，不占机械盘）。第一次看某卷时会现场生成，之后就很快了。</p></div>
+<h3>5.5 新增 / 编辑 / 删除 / 撤回</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/07_新增条目.jpg"></figure>
+<p>点「➕ 新增条目」打开表单（对应上图编号）：</p>
+<p>1. <b>胶卷型号</b>（必填）：可直接输入关键字筛选，从下拉里选。</p>
+<p>2. <b>相机</b>：同上，可输入筛选。</p>
+<p>3. <b>拍摄开始</b>（必填）/ 拍摄结束：日期格式 <code>YYYY-MM-DD</code>。</p>
+<p>4. <b>拍摄状态</b>：拍摄中 / 待冲洗 / 冲洗中 / 待归档 / 已归档。</p>
+<p>5. <b>选项设置</b>：型号或相机不在选项库里时，可以点这里去补。</p>
+<p>6. <b>确定 / 取消</b>：提交前会弹<b>差异确认</b>，列出你改了哪些字段。</p>
+<div class="callout warning"><div class="ct">几个必须知道的规则</div><p>- <b>序号</b>是主键：3~4 位数字，不能重复。<br>- <b>型号</b>和<b>拍摄开始</b>是必填；不填拍摄开始的条目<b>不会出现在列表里</b>。<br>- 输入的型号 / 相机若不在选项库，输入框会<b>标红</b>；点确定会问你要不要跳去「选项设置」添加，选「取消」会中止提交并留在表单。<br>- 删除需要手动输入屏幕上的随机确认词，属于<b>高危操作</b>，请谨慎。</p></div>
+<div class="callout info"><div class="ct">30 秒内可撤回</div><p>每次增 / 改 / 删之后，底部会出现撤回条，<b>30 秒内</b>可以撤回上一次操作（服务端窗口为 180 秒）。</p></div>
+<h3>5.6 拍摄状态与整行高亮</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/11_拍摄状态.jpg"></figure>
+<ul><li>目录视图会按「拍摄状态」给<b>整行铺浅色底 + 左侧色条</b>；「已归档」不高亮（保持清爽）。</li><li>默认颜色：<b>拍摄中 = 红</b>，<b>待冲洗 / 冲洗中 = 黄</b>，<b>待归档 = 灰</b>。</li><li>颜色可以自定义：<b>⚙ 设置 → 🎞 拍摄状态颜色</b>。</li><li>日历视图不受状态颜色影响。</li></ul>
+<h3>5.7 选项设置</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/08_选项设置.jpg"></figure>
+<ul><li>打开方式：表单右上角「⚙ 选项设置」，或设置面板里的入口。</li><li>三列分别是<b>相机选项 / 画幅选项 / 胶卷型号选项</b>，每行一项。</li><li>保存时自动<b>去空行、去重、超上限截断</b>，并写回 Excel 的「选项」工作表；之后表单下拉立即生效（已填内容保留）。</li></ul>
+<h3>5.8 设置面板</h3>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/09_设置面板.jpg"></figure>
+<p><b>数据源</b></p>
+<p>1. <b>Excel 文件名</b>：默认 <code>films.xlsx</code>，即 <code>assets/</code> 下的数据文件。</p>
+<p>2. <b>打开时自动同步</b>：勾选后每次打开页面自动读取 Excel。</p>
+<p><b>显示</b></p>
+<p>3. <b>主题色</b>：界面主色。</p>
+<p>4. <b>显示列与顺序</b>：勾选控制显示哪些列，箭头调整顺序。</p>
+<p><b>其它常用项</b>（在设置面板下方，滚动可见）：</p>
+<table><thead><tr><th>设置</th><th>作用</th></tr></thead><tbody><tr><td>日期显示格式</td><td>只影响网页显示，Excel 里始终是 <code>YYYY-MM-DD</code></td></tr><tr><td>预览来源优先级</td><td>扫描优先 / 翻拍优先</td></tr><tr><td>预览质量档位</td><td>1（性能优先）~ 5（质量优先）</td></tr><tr><td>缩略图缓存上限</td><td>默认 200 MB，超限自动删最旧</td></tr><tr><td>备份节流（秒）</td><td>默认 60 秒，避免连续操作刷出一堆备份</td></tr><tr><td>单卷预览模式</td><td>同一视图只保留一个预览面板（默认开启）</td></tr><tr><td>拍摄状态颜色</td><td>自定义状态高亮色</td></tr><tr><td>日志 / 备份目录</td><td>一键打开</td></tr></tbody></table>
+<h3>5.9 导出 Index Print（与底片放在一起的可打印索引）</h3>
+<div class="callout info"><div class="ct">它是干什么用的</div><p>Index Print 是<b>打印出来和底片收纳在一起</b>的索引页：每卷一张，上面有卷名、机型、拍摄 / 冲扫日期，以及整卷照片的缩略图。整理底片袋、翻找某一卷时，拿这张纸一眼就能对上，不用再翻电脑。</p></div>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/10_导出IndexPrint.jpg"></figure>
+<p>1. 点顶部「🖨 导出 Index Print」。</p>
+<p>2. 勾选要导出的胶卷（单选、<b>Shift 连选</b>、<b>Ctrl / ⌘ 点选</b>；也可「全选」「反选」「仅选未生成」）。</p>
+<p>3. 设置清晰度、JPEG 质量、竖图旋转、是否跳过已生成。</p>
+<p>4. 点「开始生成」，每卷生成一个与其文件夹同名的 <code>.docx</code>，输出到 <code>FILM/000_INDEX PRINT/</code>（可在设置里改）。</p>
+<p>5. 版式：135 每行 4 张、宽 4.19cm；120 每行 3 张、宽 5.59cm；竖图自动旋转。</p>
+<div class="callout info"><div class="ct">冲洗店给的「整卷缩略图」会被自动排除，不会导出到 Index Print。</div><p></p></div>
+<p><b>导出效果示例</b>（第 052 卷，135 / Kodak 500T 5219）：</p>
+<figure><img src="file:///Users/liaopengcheng/Documents/Obsidian.nocync/Obsidian%20Vault/3%20Mission%20Board｜任务板/胶卷管理软件/attachments/12_IndexPrint示例.jpg"></figure>
+<div class="callout tip"><div class="ct">示例源文件</div><p>上面这张示例的 docx 原件与 PDF 也在本笔记附件里，可对照查看：<br>- [[052_index 2748_Kodak 500T 5219_240916-240922.docx]]<br>- [[052_index 2748_Kodak 500T 5219_240916-240922.pdf]]</p></div>
+<hr>
+<h2>六、数据、备份与恢复</h2>
+<h3>6.1 文件都在哪</h3>
+<table><thead><tr><th>文件 / 目录</th><th>作用</th></tr></thead><tbody><tr><td><code>assets/films.xlsx</code></td><td><b>核心数据库</b>，所有胶卷信息都在这里（Excel 可直接打开查看）</td></tr><tr><td><code>assets/settings.json</code></td><td>你保存的设置</td></tr><tr><td><code>assets/snapshot.json</code></td><td>程序生成的快照，一般不用管</td></tr><tr><td><code>assets/backup/</code></td><td>备份（编辑备份 10 份 + 每日备份 30 份）</td></tr><tr><td><code>assets/log/</code></td><td>日志，按天一个文件，保留 30 天</td></tr><tr><td>系统缓存目录</td><td>预览缩略图缓存（macOS：<code>~/Library/Caches/FilmIndex</code>）</td></tr></tbody></table>
+<h3>6.2 备份与恢复</h3>
+<ul><li><b>自动备份</b>：启动时、每天首次、每次增删改，都会在 <code>assets/backup/</code> 留一份带时间戳的备份。</li><li><b>恢复</b>：找到 <code>backup/films_&lt;时间戳&gt;_&lt;类型&gt;.xlsx</code>，复制回 <code>assets/films.xlsx</code> 覆盖即可。</li><li><b>撤回</b>：界面里的撤回条（30 秒内）用的是 <code>backup/_undo.xlsx</code>。</li></ul>
+<h3>6.3 日志</h3>
+<p>每次启动、增删改、缩略图生成、导出都会写日志。出问题时，打开 <code>assets/log/</code> 下当天的文件即可排查。</p>
+<hr>
+<h2>七、常见问题（FAQ）</h2>
+<div class="callout info"><div class="ct">- 双击启动脚本没反应 / 提示来自身份不明的开发者？</div><p>macOS：右键该文件 → 打开 → 再点「打开」；或到 <b>系统设置 → 隐私与安全性</b> 点「仍要打开」。</p></div>
+<div class="callout info"><div class="ct">- 页面能打开，但没有数据 / 一直显示「共 0 卷」？</div><p>多半是「拍摄开始」没填，或序号不是 3~4 位数字。软件只收录<b>序号为 3~4 位数字、且拍摄开始非空</b>的条目。</p></div>
+<div class="callout info"><div class="ct">- 修改被拒绝，提示「检测到 Excel 正打开 …」？</div><p>请先关闭正在打开 <code>films.xlsx</code> 的 Excel / LibreOffice，再操作。若确认要强写，可按提示强制继续（但你之后在 Excel 里保存会覆盖它）。</p></div>
+<div class="callout info"><div class="ct">- 图片不显示 / 提示找不到目录？</div><p>检查这一卷里是否有 <code>010_scan / 011_scanPost / 021_camPost</code> 子目录，以及图片扩展名是否为 jpg / jpeg / png / heic / heif / hif。</p></div>
+<div class="callout info"><div class="ct">- 「打开文件夹」点不动？</div><p>该功能<b>必须用 Safari</b>；Chrome / Edge 禁止网页跳转到本地文件夹。</p></div>
+<div class="callout info"><div class="ct">- 预览很慢？</div><p>- <b>Windows</b>：v0.4.5 起缩略图<b>边生成边显示</b>（不再等整卷跑完才一起出现），并且<b>正在看的那几张优先做</b>、多进程并行；首次看某卷仍需要几秒，之后走缓存秒开。<br>- macOS 上第一次看某一卷会现场生成缩略图（几秒内），<b>再看同一卷走缓存，基本秒开</b>。<br>- 可以把 <b>预览质量档位</b>调低、<b>缩略图缓存上限</b>调大；系统缓存目录尽量放在 SSD。<br>- v0.4.0 及更早的 Windows 版最慢（每张图起一个 PowerShell 进程），请尽快升级。</p></div>
+<div class="callout info"><div class="ct">- 改了代码之后要做什么？</div><p>- 改了 <code>build_html.py</code> → 必须重新运行 <code>python3 assets/build_html.py</code> 生成 <code>index.html</code>。<br>- 改了 <code>worker.py</code> → 必须<b>重启服务</b>（后端只在启动时加载）。<br>- 直接改 <code>index.html</code> 会在下次生成时被覆盖，白干。</p></div>
+<div class="callout info"><div class="ct">- 数据会不会丢？</div><p>有自动备份 + 撤回机制，但<b>没有版本控制</b>。重要数据请定期把 <code>assets/films.xlsx</code> 单独复制一份到别处。</p></div>
+<hr>
+<h2>八、已知限制</h2>
+<div class="callout info"><div class="ct">请留意</div><p>- <b>只在 macOS 上完整测试</b>，Windows 可用但尚未测试。<br>- <b>无自动更新、无云同步</b>，数据完全靠你自己备份。<br>- 拍摄状态目前<b>不参与搜索</b>。<br>- <code>020_cam</code> 用于存放翻拍 RAW / 去色罩源文件，软件<b>不读取</b>它（正常现象）。<br>- 缩略图缓存放在系统缓存目录，清理系统缓存会清掉预览缓存（不影响数据，重新生成即可）。</p></div>
+<hr>
+<h2>九、版权与免责</h2>
+<div class="callout info"><div class="ct">使用条款</div><p>- 作者：<b>Esc. X-ray</b><br>- <b>免费公开，禁止商用。</b><br>- 不对使用本软件造成的任何直接或间接影响负责。<br>- <b>不承诺后续维护或更新。</b><br>- 你可以自行使用 AI 工具客制化本软件。</p></div>
+<hr>
+<h2>文件夹名自动同步 / 一键创建（v0.4.9 起）</h2>
+<div class="callout tip"><div class="ct">每个弹窗顶部都会显示「有没有匹配到文件夹」</div><p>打开「新增 / 编辑」「确认提交」「删除」这类<b>针对某一条胶卷</b>的弹窗时，标题下方都会有一条状态：<br>- 绿底 <b>📁 已匹配到文件夹：xxx</b> —— 正常；<br>- 红底 <b>⚠ 未找到对应文件夹（按当前信息应为 xxx）</b> —— 硬盘上还没有这一卷；<br>- 黄底 <b>✏️ 信息已修改：保存后会把文件夹名同步改为「B」（当前硬盘上是「A」）</b> —— 你刚改了会影响文件夹名的字段；<br>- 红底 <b>⚠ 文件夹名与当前信息不一致</b> —— 保存后也会自动同步；<br>建好 / 改好文件夹后状态会<b>立刻刷新</b>，不用关掉重开。</p></div>
+<div class="callout tip"><div class="ct">编辑后自动同步文件夹名（保存即改）</div><p>修改某卷的<b>胶卷编号 / 胶卷型号 / 拍摄开始 / 拍摄结束</b>后，如果算出来的文件夹名变了，<b>保存时会直接把硬盘上的真实文件夹改名</b>，不再单独弹窗问你。格式仍是 <code>&lt;序号&gt;_index &lt;编号&gt;_&lt;型号&gt;_&lt;YYMMDD&gt;[-&lt;YYMMDD&gt;]</code>。<br>- <b>改之前就能看见</b>：编辑页顶部状态条会动态提示「✏️ 信息已修改：保存后会把文件夹名同步改为「新名」（当前硬盘上是「旧名」）」；<br>- 硬盘上找不到这一卷的文件夹 → 不改名，只提示；<br>- 新名字对应的文件夹已存在 → <b>拒绝改名</b>并提示，绝不覆盖。</p></div>
+<div class="callout tip"><div class="ct">新增条目：一键建文件夹</div><p>「➕ 新增条目」表单底部有：<br>- <b>📁 创建文件夹</b>：按当前填写的序号 / 编号 / 型号 / 拍摄开始算出文件夹名并创建。可点时是<b>蓝色</b>；<b>如果该卷文件夹已经存在，按钮会变成灰色虚线框并显示「📁 文件夹已存在」</b>，一眼就能看出不能点。<br>- <b>🔄 同步文件夹名</b>：手动把硬盘上的文件夹改成与表格一致，用于修历史遗留的不一致。<br><br>注：v0.4.9 起<b>暂不提供</b>「同时创建标准子文件夹」（子文件夹并非每卷都有，容易显得冗余）；后端接口保留了该参数，以后需要可随时恢复。</p></div>
+<div class="callout tip"><div class="ct">新增保存后会主动问你要不要建文件夹</div><p>新增条目<b>保存成功后</b>，如果当前信息在硬盘上<b>没有匹配到文件夹</b>，软件会弹窗询问是否现在创建（创建前会显示完整文件夹名）。</p></div>
+<p>&gt; 以上操作都只在<b>服务模式</b>（双击启动脚本打开）下可用，执行前都会弹确认框。</p>
+<hr>
+<p>*本文档对应版本 v1.0.3。*</p><section style="margin:32px 0;padding:20px 24px;background:#fbf8f1;border:1px solid #ecdfc6;border-radius:12px;line-height:2;font-size:15px"><h2 style="margin:0 0 12px;font-size:19px">放进「应用程序」—— 用 Spotlight / 启动台秒开</h2><p>发布包里的 <b>Film Index Page.app</b> 是一个标准的 macOS 应用。</p><p><b>怎么装：</b>把它拖进「应用程序」文件夹即可。</p><p><b>怎么打开：</b>Cmd + 空格 输入 <code>film</code> 回车，或到「启动台」点图标。</p><p><b>启动逻辑（第一次会问你一次）：</b>首次打开会弹出文件夹选择框，让你指定「胶卷索引信息」所在目录 —— 选中那个含有 <code>010_启动Mac.command</code> 和 <code>assets</code> 的文件夹即可；选好后自动记住，以后秒开。若日后目录被移动，软件会检测到并自动重新弹框让你选，不用手动改配置。也可以把 .app 直接放进「胶卷索引信息」文件夹里，这样它自己就能认出位置，连第一次选择都省了。</p><p><b>怎么关闭：</b>软件在一个终端窗口里运行本地服务，关掉那个窗口即停止服务，不会在后台留下进程。</p><p><b>若提示「无法打开，因为来自身份不明的开发者」：</b>这是下载来的 .app 被加了隔离标记。在「应用程序」里右键该 .app →「打开」→ 再点「打开」，之后即可正常双击。</p></section>
+</body></html>

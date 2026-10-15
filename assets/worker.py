@@ -5,7 +5,7 @@
   python3 assets/worker.py --build    重新生成 assets/snapshot.json
 
 目录：
-  000_胶卷索引信息/
+  000_Film_Index_Page/
     ├─ 010_启动Mac.command / 011_启动Win.bat / 030_手动更新索引.command
     └─ assets/
          ├─ index.html        页面
@@ -55,7 +55,7 @@ UNDO = os.path.join(BACKUP, "_undo.xlsx")
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 MISS = "-"
 MAXROWS = 300
-VERSION = "v1.0.2"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
+VERSION = "v1.0.3"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
 
 DEFAULT_SET = {"excel": "films.xlsx", "auto": True, "theme": "#4472c4", "throttle": 60,
                "imgOrder": "scan", "dateFmt": "iso", "thumb": True, "thumbQ": 1,

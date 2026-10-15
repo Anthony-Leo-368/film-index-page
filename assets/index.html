@@ -811,7 +811,7 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
 <header>
  <h1><svg class="i hdmark"><use href="#i-mark"/></svg>
 <span class="logo">Film Index Page</span>
-<span class="verpill" tabindex="0">v1.0.2<span class="vercard"><span class="vt">v1.0.2（2026-10-13） 更新内容</span><ul><li>新增：日期范围搜索模式改为「部分 / 完全」分段滑块，带滑块平滑移动动画（保留「日期搜索模式：」标签）。</li><li>新增：底部浮动按钮（新增条目 / 收起预览等）升级为 iOS 风格液态玻璃效果 —— 高模糊 + 高饱和、镜面高光、内反光、玻璃边缘光。</li><li>更名：Index Paper 全面更名为 Index Print（界面、说明文档、默认输出文件夹 000_INDEX PRINT）。</li><li>调整：日历视图横条改为毛玻璃质感 + 低饱和度配色（保留色相识别），圆角收口。</li><li>调整：日历横条跨行端部改用同色虚线表示，不再使用箭头。</li><li>调整：日历视图鼠标悬停浮层由深色改为白底深字，可读性大幅提升；去掉「双击 = 展开预览」提示行。</li><li>优化：日历横条悬停放大不再卡顿（移除昂贵的 filter，只动 transform）。</li></ul><a class="vlink" href="https://github.com/Anthony-Leo-368/film-index-page" target="_blank" rel="noopener"><svg class="i"><use href="#i-external"/></svg>github.com/Anthony-Leo-368/film-index-page</a><a class="vlink" href="https://www.jianguoyun.com/p/DSKDf6cQ07D8CxjElasGIAA" target="_blank" rel="noopener"><svg class="i"><use href="#i-download-cloud"/></svg>获取软件及更新下载链接（坚果云）</a><span class="vmeta">小红书：Esc. X-ray</span></span></span></h1>
+<span class="verpill" tabindex="0">v1.0.3<span class="vercard"><span class="vt">v1.0.3（2026-10-15） 更新内容</span><ul><li>新增：编辑 / 新增条目时可一键「添加子文件夹」——内置 010_scan（扫描原片）、011_scanPost（扫描后期）、020_cam（翻拍原片）、021_camPost（翻拍后期）四个标准子文件夹；已存在的自动置灰不可选，支持一键全选。</li><li>新增：新增条目时创建文件夹与子文件夹改为「保存后生效」——在新增界面点创建只是先记下，取消添加不会在硬盘留下空文件夹。</li><li>优化：新增条目的建文件夹确认合并为一次（去掉原来保存后的二次询问弹窗），第一屏直接显示将要创建的文件夹名与子文件夹。</li><li>新增：软件图标重做为矢量图（米色底 + 珊瑚色胶卷暗盒 + 灰色片头），任意尺寸都清晰。</li><li>新增：macOS 应用包 Film Index Page.app —— 装好后可用 Spotlight（⌘+空格）或启动台直接打开。包内附 020_安装到应用程序.command 一键安装。</li><li>新增：应用启动时会自动记住软件目录；若目录被移动或找不到，会弹出文件夹选择框让用户指定，选好后记住，下次直接打开。</li><li>优化：应用在可见的终端窗口中运行服务 —— 关掉窗口即停止服务，不会残留后台进程，程序坞也不会一直显示「正在打开」。</li></ul><a class="vlink" href="https://github.com/Anthony-Leo-368/film-index-page" target="_blank" rel="noopener"><svg class="i"><use href="#i-external"/></svg>github.com/Anthony-Leo-368/film-index-page</a><a class="vlink" href="https://www.jianguoyun.com/p/DSKDf6cQ07D8CxjElasGIAA" target="_blank" rel="noopener"><svg class="i"><use href="#i-download-cloud"/></svg>获取软件及更新下载链接（坚果云）</a><span class="vmeta">小红书：Esc. X-ray</span></span></span></h1>
  <span id="viewSw">
   <button id="vwList" class="on" title="目录视图（表格）"><svg class="i"><use href="#i-list"/></svg>  目录视图</button>
   <button id="vwCal" title="日历视图（按拍摄时间排布）"><svg class="i"><use href="#i-calendar"/></svg>  日历视图</button>
@@ -3667,7 +3667,7 @@ function openSet(){
   $("sHint").innerHTML = (SRV
     ? "当前为 <b>服务模式</b>：点「应用」或「确定」后，全部设置会写入 <code>assets/" + SETTFILE +
       "</code>（不依赖浏览器），快照写回 <code>assets/" + SNAPFILE +
-      "</code> —— 整个「000_胶卷索引信息」文件夹拷到别的电脑也能继续用。"
+      "</code> —— 整个「000_Film_Index_Page」文件夹拷到别的电脑也能继续用。"
     : "当前为 <b>文件模式</b>（直接双击 HTML 打开）。浏览器不允许网页写文件，所以设置只能存在浏览器本地；" +
       "请双击 <code>010_启动Mac.command</code> 用服务模式打开，设置与快照才能落到文件夹里。")
     + (diag ? "<br><br><b>诊断：</b><span style='color:#a33'>" + esc(diag) + "</span>" : "");

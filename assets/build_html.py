@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """生成薄版索引页（资源全部外置到 assets/，ASCII 命名）
-   本文件放在 000_胶卷索引信息/assets/ 内运行：
+   本文件放在 000_Film_Index_Page/assets/ 内运行：
      assets/build_html.py
      assets/worker.py        快照/本地服务
      assets/films.xlsx       数据源
@@ -898,7 +898,7 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
 <header>
  <h1><svg class="i hdmark"><use href="#i-mark"/></svg>
 <span class="logo">Film Index Page</span>
-<span class="verpill" tabindex="0">v1.0.2<span class="vercard">__VERCARD__</span></span></h1>
+<span class="verpill" tabindex="0">v1.0.3<span class="vercard">__VERCARD__</span></span></h1>
  <span id="viewSw">
   <button id="vwList" class="on" title="目录视图（表格）"><svg class="i"><use href="#i-list"/></svg>  目录视图</button>
   <button id="vwCal" title="日历视图（按拍摄时间排布）"><svg class="i"><use href="#i-calendar"/></svg>  日历视图</button>
@@ -3754,7 +3754,7 @@ function openSet(){
   $("sHint").innerHTML = (SRV
     ? "当前为 <b>服务模式</b>：点「应用」或「确定」后，全部设置会写入 <code>assets/" + SETTFILE +
       "</code>（不依赖浏览器），快照写回 <code>assets/" + SNAPFILE +
-      "</code> —— 整个「000_胶卷索引信息」文件夹拷到别的电脑也能继续用。"
+      "</code> —— 整个「000_Film_Index_Page」文件夹拷到别的电脑也能继续用。"
     : "当前为 <b>文件模式</b>（直接双击 HTML 打开）。浏览器不允许网页写文件，所以设置只能存在浏览器本地；" +
       "请双击 <code>__LAUNCHER__</code> 用服务模式打开，设置与快照才能落到文件夹里。")
     + (diag ? "<br><br><b>诊断：</b><span style='color:#a33'>" + esc(diag) + "</span>" : "");
