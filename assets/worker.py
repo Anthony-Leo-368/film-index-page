@@ -55,7 +55,7 @@ UNDO = os.path.join(BACKUP, "_undo.xlsx")
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 MISS = "-"
 MAXROWS = 300
-VERSION = "v1.0.3"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
+VERSION = "v1.0.4"          # 公开发布版（文件夹名自动同步 + 一键创建文件夹）
 
 DEFAULT_SET = {"excel": "films.xlsx", "auto": True, "theme": "#4472c4", "throttle": 60,
                "imgOrder": "scan", "dateFmt": "iso", "thumb": True, "thumbQ": 1,
@@ -838,6 +838,7 @@ def _prepare_undo():
         shutil.copy2(src, UNDO)
     except Exception as e:
         log("WARNING", "撤回点写入失败：%s" % e)
+    _fj_reset()          # 新操作开新账，文件夹日志一起重置
 
 def _after_write(tag):
     try:
@@ -986,8 +987,12 @@ def op_undo(force=False):
             write_snapshot()
         except Exception as e:
             log("ERROR", "撤回后快照刷新失败：%s" % e)
+        notes = _fj_rollback()          # 文件夹状态也一并回滚
         LAST["desc"], LAST["ts"] = None, None
-        return {"ok": True, "msg": "已撤回：%s" % desc, "desc": desc}
+        msg = "已撤回：%s" % desc
+        if notes:
+            msg += "（" + "；".join(notes) + "）"
+        return {"ok": True, "msg": msg, "desc": desc, "folders": notes}
 
 # ==================== 选项表（相机 / 画幅 / 胶卷型号） ====================
 def _norm_opts(src):
@@ -2347,6 +2352,96 @@ def _locate_roll_dir(seq, old_cells=None, prefer_name=None):
     return None
 
 
+# ==================== 文件夹操作日志（取消 / 撤回时回滚用） ====================
+FJ = os.path.join(BACKUP, "_undo_folder.json")
+
+def _fj_load():
+    try:
+        with open(FJ, encoding="utf-8") as f:
+            v = json.load(f)
+        return v if isinstance(v, list) else []
+    except Exception:
+        return []
+
+def _fj_save(lst):
+    try:
+        tmp = FJ + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(lst[-80:], f, ensure_ascii=False)
+        os.replace(tmp, FJ)
+    except Exception as e:
+        log("WARNING", "文件夹日志写入失败：%s" % e)
+
+def _fj_add(rec):
+    lst = _fj_load()
+    lst.append(rec)
+    _fj_save(lst)
+
+def _fj_reset():
+    try:
+        if os.path.exists(FJ):
+            os.remove(FJ)
+    except Exception:
+        pass
+
+def _trash_path(p, base):
+    """把绝对路径移入废纸篓 / 回收站，兜底移到 ROOT/_已删除。返回落点说明。"""
+    if sys.platform == "darwin":
+        try:
+            sc = 'tell application "Finder" to delete POSIX file "%s"' % p.replace('"', '\\"')
+            subprocess.run(["osascript", "-e", sc], check=True, timeout=60,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+            return "废纸篓"
+        except Exception:
+            pass
+    try:
+        junk = os.path.join(ROOT, "_已删除")
+        os.makedirs(junk, exist_ok=True)
+        os.rename(p, os.path.join(junk, "%s-%s" % (base, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))))
+        return "_已删除"
+    except OSError as e:
+        return "失败：%s" % e
+
+def _fj_rollback():
+    """倒序回滚文件夹操作。返回中文说明列表。"""
+    lst = _fj_load()
+    notes = []
+    for rec in reversed(lst):
+        t = rec.get("t")
+        try:
+            if t == "mkdir":
+                p = rec.get("path") or ""
+                if os.path.isdir(p):
+                    how = _trash_path(p, os.path.basename(p))
+                    notes.append("已移除新建的 %s（%s）" % (os.path.basename(p), how))
+            elif t == "rename":
+                src, dst = rec.get("src") or "", rec.get("dst") or ""
+                if os.path.isdir(dst):
+                    if os.path.exists(src):
+                        notes.append("旧名字已被占用，未能改回：%s" % os.path.basename(src))
+                    else:
+                        os.rename(dst, src)
+                        notes.append("已改回 %s" % os.path.basename(src))
+            elif t == "trash":
+                src = rec.get("src") or ""
+                if not os.path.isdir(src):
+                    base = os.path.basename(src)
+                    cands = [os.path.join(os.path.expanduser("~/.Trash"), base),
+                             os.path.join(ROOT, "_已删除", base)]
+                    for c in cands:
+                        if os.path.isdir(c) and not os.path.exists(src):
+                            os.rename(c, src)
+                            notes.append("已找回 %s" % base)
+                            break
+        except Exception as e:
+            notes.append("文件夹还原失败：%s" % e)
+    _fj_reset()
+    try:
+        _invalidate_root_list()
+    except Exception:
+        pass
+    return notes
+
 def folder_plan(seq, cells, old_cells=None):
     """编辑后是否需要把硬盘文件夹改名（只判断，不动手）。"""
     target = roll_name(cells)
@@ -2389,6 +2484,7 @@ def folder_sync(seq, cells, old_cells=None):
     old = os.path.basename(cur)
     try:
         os.rename(cur, dst)
+        _fj_add({"t": "rename", "src": cur, "dst": dst})
     except OSError as e:
         log("ERROR", "文件夹改名失败：%s → %s（%s）" % (old, plan["name"], e))
         return {"ok": False, "changed": False, "old": old, "name": plan["name"],
@@ -2430,6 +2526,7 @@ def folder_delete(seq, name):
     base = os.path.basename(cur)
     if not safe_under(ROOT, base):
         return {"ok": False, "msg": "路径不合法，未删除"}
+    _fj_add({"t": "trash", "src": cur})     # 记录，供取消 / 撤回时找回
     if sys.platform == "darwin":
         try:
             sc = 'tell application "Finder" to delete POSIX file "%s"' % cur.replace('"', '\\"')
@@ -2482,6 +2579,8 @@ def folder_mkdir(cells, subs=False):
     made = []
     try:
         os.makedirs(dst, exist_ok=True)
+        if not existed:
+            _fj_add({"t": "mkdir", "path": dst})
         if subs:
             want = SUB_ALL if subs is True else [x for x in SUB_ALL if x in (subs or [])]
             for s in want:
@@ -2489,6 +2588,7 @@ def folder_mkdir(cells, subs=False):
                 if not os.path.exists(p):
                     os.makedirs(p)
                     made.append(s)
+                    _fj_add({"t": "mkdir", "path": p})
     except OSError as e:
         log("ERROR", "创建文件夹失败：%s（%s）" % (target, e))
         return {"ok": False, "msg": "创建失败：%s" % e}
@@ -2963,6 +3063,8 @@ class H(BaseHTTPRequestHandler):
                         except Exception as e:
                             log("WARNING", "图标变更后刷新快照失败：%s" % e)
                         self._json({"ok": True})
+            elif path == "/__folderrollback":
+                self._json({"ok": True, "notes": _fj_rollback()})
             elif path == "/__mkdir":
                 o = json.loads(body.decode("utf-8") or "{}")
                 self._json(folder_mkdir(o.get("cells") or [], o.get("subs") or False))

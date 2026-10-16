@@ -898,7 +898,7 @@ header h1{display:flex!important;align-items:center!important;gap:3px!important}
 <header>
  <h1><svg class="i hdmark"><use href="#i-mark"/></svg>
 <span class="logo">Film Index Page</span>
-<span class="verpill" tabindex="0">v1.0.3<span class="vercard">__VERCARD__</span></span></h1>
+<span class="verpill" tabindex="0">v1.0.4<span class="vercard">__VERCARD__</span></span></h1>
  <span id="viewSw">
   <button id="vwList" class="on" title="目录视图（表格）"><svg class="i"><use href="#i-list"/></svg>  目录视图</button>
   <button id="vwCal" title="日历视图（按拍摄时间排布）"><svg class="i"><use href="#i-calendar"/></svg>  日历视图</button>
@@ -2583,8 +2583,10 @@ async function refreshFolderState(){
   }
   var edited = folderEdited(c);
   mk.disabled = !!f.exists;
-  mk.textContent = f.exists ? "📁 文件夹已存在" : "📁 创建文件夹";
-  var asb = $("edAddSub"); if (asb) asb.style.display = f.exists ? "" : "none";   /* 有文件夹才显示「添加子文件夹」 */
+  var pend = !!PENDING_MK;   /* 新增模式已点过「创建文件夹」：文件夹还没建，但状态要当成已建 */
+  mk.textContent = pend ? "📁 保存时创建文件夹" : (f.exists ? "📁 文件夹已存在" : "📁 创建文件夹");
+  var asb = $("edAddSub");
+  if (asb) asb.style.display = (f.exists || pend) ? "" : "none";   /* 已建 or 待建 都显示「添加子文件夹」 */
   mk.title = f.exists ? ("该卷文件夹已存在，无需创建：" + f.found) : "在胶卷目录（FILM）下创建这一卷的文件夹";
   if (sf){
     sf.disabled = !f.exists || f.same;
@@ -2606,14 +2608,6 @@ function scheduleFolderState(){
 async function createFolder(){
   var c = folderCells(); if (!c) return;
   var name = guessName(c);
-  /* 新增模式：先记下，等条目保存成功后再真正建文件夹（避免取消后留下空文件夹） */
-  if (EMODE === "add"){
-    PENDING_MK = c;
-    toast("ℹ 已记下：保存条目时会自动创建文件夹「" + name + "」", 5500);
-    var mk0 = $("edMkFolder"); if (mk0){ mk0.textContent = "📁 保存时创建文件夹"; }
-  var asb0 = $("edAddSub"); if (asb0) asb0.style.display = "";   /* 新增模式：先记录，保存时一起建 */
-    return;
-  }
   if (!confirm("将在胶卷目录（FILM）下创建文件夹：\n\n" + name + "\n\n确定创建？")) return;
   var r;
   try { r = await postJSON("/__mkdir", {cells:c, subs: []}); }   /* 手动创建时不带子文件夹 */
@@ -2628,14 +2622,6 @@ async function createFolder(){
 async function addSubFolder(){
   var c = folderCells(); if (!c) return;
   var name = guessName(c), info;
-  if (EMODE === "add"){
-    /* 新增模式：文件夹还没建，4 个都算「不存在」 */
-    if (!PENDING_MK){ toast("⚠ 请先点「📁 创建文件夹」", 6000); return; }
-    showSubPanel(Object.keys(SUB_DESC).map(function(x){
-      return {name: x, exists: PENDING_SUBS.indexOf(x) >= 0};
-    }), c, true);
-    return;
-  }
   try { info = await folderInfoOf(String(c[0] || ""), name); }
   catch(e){ toast("⚠ 读取文件夹信息失败：" + e.message, 6000); return; }
   if (!info || !info.exists){ toast("⚠ 这一条还没有文件夹，请先点「创建文件夹」", 6500); return; }
@@ -3923,7 +3909,13 @@ function bind(){
   $("ipGo").addEventListener("click", ipRun);
   $("ipStop").addEventListener("click", function(){ IP.stop = true; this.disabled = true; toast("正在停止（等当前这卷写完）…", 3000); });
   $("ipOpenDir2").addEventListener("click", ipOpenDir);
-  $("edCancel").addEventListener("click", function(){ $("edMask").classList.remove("on"); closeSubPanel(); PENDING_MK = null; PENDING_SUBS = []; });
+  $("edCancel").addEventListener("click", async function(){
+    $("edMask").classList.remove("on"); closeSubPanel(); PENDING_MK = null; PENDING_SUBS = [];
+    try {
+      var r = await postJSON("/__folderrollback", {});
+      if (r && r.notes && r.notes.length) toast("文件夹已还原：" + r.notes.join("；"), 8000);
+    } catch(e){}
+  });
   $("edOk").addEventListener("click", submitForm);
   $("edDel").addEventListener("click", openDelete);
   $("cfNo").addEventListener("click", closeCf);
